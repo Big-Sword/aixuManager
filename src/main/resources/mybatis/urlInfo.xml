@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.bao.model.UrlInfo">
+
+    <update id="updateUrlInfo" parameterType="com.bao.model.UrlInfo">
+        update  url_info  set url = #{url} , descInfo=#{descInfo} where id = #{id}
+    </update>
+
+    <select id="selectAll" resultType="com.bao.model.UrlInfo">
+        select id,url,descInfo
+        from url_info
+    </select>
+
+    <select id="selectOne" resultType="com.bao.model.UrlInfo" parameterType="java.lang.Long">
+        select id,url,descInfo
+        from url_info
+        where id = #{id}
+    </select>
+
+</mapper>
