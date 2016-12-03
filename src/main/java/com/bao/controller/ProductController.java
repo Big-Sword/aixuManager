@@ -2,6 +2,7 @@ package com.bao.controller;
 
 import java.util.List;
 
+import com.bao.framework.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,24 +23,24 @@ public class ProductController {
 	private ProductMapper mapper;
 
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
-	public List<Product> getInfo() {
+	public ResponseEntity<?> getInfo() {
 		List<Product> products = mapper.selectAll();
-		return products;
+		return ResponseEntity.success(products);
 	}
 
 	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
-	public boolean saveOrUpdate(@RequestBody Product product) {
-		return mapper.saveOrUpdate(product);
+	public ResponseEntity<?> saveOrUpdate(@RequestBody Product product) {
+		return ResponseEntity.success(mapper.saveOrUpdate(product));
 	}
 
 	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-	public boolean deleteProduct(@PathVariable("id") String id) {
-		return mapper.deleteById(Long.parseLong(id));
+	public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
+		return ResponseEntity.success(mapper.deleteById(Long.parseLong(id)));
 	}
 
 	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-	public Product getInfoById(@PathVariable("id") String id) {
-		return mapper.selectById(Long.parseLong(id));
+	public ResponseEntity<?> getInfoById(@PathVariable("id") String id) {
+		return ResponseEntity.success(mapper.selectById(Long.parseLong(id)));
 	}
 
 }
