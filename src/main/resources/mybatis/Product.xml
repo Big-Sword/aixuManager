@@ -4,36 +4,89 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.bao.model.Product">
-    <resultMap id="BaseResultMap" type="com.bao.model.Product" >
-        <id column="id" property="id" />
-        <result column="name" property="name" />
-        <result column="pic_url" property="picUrl" />
-        <result column="content" property="content" />
-        <result column="price" property="price" />
-        <result column="stock" property="stock" />
-        <result column="model_type" property="modelType" />
-        <result column="colour_type" property="colourType" />
-        <result column="remark" property="remark" />
-    </resultMap>
-    <sql id="Base_Column_List" >
-        id
-        ,name
-        ,pic_url
-        ,content
-        ,price
-        ,stock
-        ,model_type
-        ,colour_type
-        ,remark
-        ,created_at
-        ,updated_at
-    </sql>
+	<resultMap id="BaseResultMap" type="com.bao.model.Product">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="pic_url" property="picUrl" />
+		<result column="content" property="content" />
+		<result column="price" property="price" />
+		<result column="stock" property="stock" />
+		<result column="model_type" property="modelType" />
+		<result column="colour_type" property="colourType" />
+		<result column="remark" property="remark" />
+		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
+		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
+		<result column="is_delete" property="isDelete" />
 
-    <select id="selectAll" resultMap="BaseResultMap">
-        select
-        <include refid="Base_Column_List" />
-        from product
-        where is_delete = 0
-    </select>
+	</resultMap>
+	<sql id="Base_Column_List">
+		id
+		,name
+		,pic_url
+		,content
+		,price
+		,stock
+		,model_type
+		,colour_type
+		,remark
+		,created_at
+		,updated_at
+		,is_delete
+	</sql>
+
+	<select id="selectAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0
+	</select>
+
+	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0 and id = #{id}
+	</select>
+
+	<insert id="createProduct" parameterType="com.bao.model.Product"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into product(
+		<include refid="Base_Column_List" />)
+		values(null,#{name},#{picUrl},#{content},#{price},#{stock},#{modelType},#{colourType},#{remark},null,null,0)
+	</insert>
+
+	<update id="updateById" parameterType="com.bao.model.Product">
+		update product
+		<set>
+			<if test="name != null">
+				name = #{name},
+			</if>
+			<if test="picUrl != null">
+				pic_url = #{picUrl},
+			</if>
+			<if test="content != null">
+				content = #{content},
+			</if>
+			<if test="stock != null">
+				stock = #{stock},
+			</if>
+			<if test="modelType != null">
+				model_type = #{modelType},
+			</if>
+			<if test="colourType != null">
+				colour_type = #{colourType},
+			</if>
+			<if test="remark != null">
+				remark = #{remark}
+			</if>
+		</set>
+		where id = #{id}
+	</update>
+
+	<update id="deleteById" parameterType="java.lang.Long">
+		update product set
+		is_delete = 1 where id = #{id}
+	</update>
+
 
 </mapper>

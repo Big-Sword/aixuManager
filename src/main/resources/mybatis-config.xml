@@ -8,5 +8,8 @@
     </typeAliases>
     <mappers>
         <mapper resource="mybatis/Product.xml"/>
+        <mapper resource="mybatis/Manager.xml"/>
+        <mapper resource="mybatis/Shopper.xml"/>
+        
     </mappers>
 </configuration>
