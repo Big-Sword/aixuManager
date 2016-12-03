@@ -2,7 +2,7 @@
 
 
 ##1.1（后台登录）
-## http://localhost:8080/manager/login
+## http://localhost:8080/manager/common/login
 
 ``` 
 post
