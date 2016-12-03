@@ -9,9 +9,9 @@ spring:
     instance_id: 002
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/test?characterEncoding=utf-8
+    url: jdbc:mysql://115.28.36.79:3306/aixuManager?characterEncoding=utf-8
     username: root
-    password: 1234
+    password: root
   #数据库连接池配置
     max-active: 200
     max-idle: 100

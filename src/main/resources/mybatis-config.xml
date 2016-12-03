@@ -7,6 +7,6 @@
         <package name="com.bao.model"/>
     </typeAliases>
     <mappers>
-        <mapper resource="mybatis/urlInfo.xml"/>
+        <mapper resource="mybatis/Product.xml"/>
     </mappers>
 </configuration>
