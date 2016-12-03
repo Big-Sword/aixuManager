@@ -76,36 +76,40 @@ get
 ``` 
 
 ``` 
-[
-  {
-    "id": 2,
-    "name": "假的",
-    "picUrl": "http:hippo",
-    "content": "大象",
-    "price": 24.85,
-    "stock": 0,
-    "modelType": "来来来",
-    "colourType": "白色",
-    "remark": "无",
-    "isDelete": 0,
-    "createdAt": 1480744527000,
-    "updatedAt": 1480766165000
-  },
-  {
-    "id": 3,
-    "name": "真假",
-    "picUrl": "http:hippo",
-    "content": "大象",
-    "price": 24.85,
-    "stock": 0,
-    "modelType": "来来来",
-    "colourType": "白色",
-    "remark": "无",
-    "isDelete": 0,
-    "createdAt": 1480769581000,
-    "updatedAt": 1480769581000
-  }
-]
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    {
+      "id": 2,
+      "name": "假的",
+      "picUrl": "http:hippo",
+      "content": "大象",
+      "price": 24.85,
+      "stock": 0,
+      "modelType": "来来来",
+      "colourType": "白色",
+      "remark": "无",
+      "isDelete": 0,
+      "createdAt": 1480744527000,
+      "updatedAt": 1480766165000
+    },
+    {
+      "id": 3,
+      "name": "真假",
+      "picUrl": "http:hippo",
+      "content": "大象",
+      "price": 24.85,
+      "stock": 0,
+      "modelType": "来来来",
+      "colourType": "白色",
+      "remark": "无",
+      "isDelete": 0,
+      "createdAt": 1480769581000,
+      "updatedAt": 1480769581000
+    }
+  ]
+}
 ```
 
 ##1.5（产品删除）
