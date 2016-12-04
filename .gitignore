@@ -53,3 +53,9 @@ hs_err_pid*
 .idea
 .metadata
 >>>>>>> origin/master
+
+*.log
+
+*.log
+
+e:/logs/ms-duminjun.log
