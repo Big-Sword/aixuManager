@@ -37,8 +37,8 @@ public class ManagerController {
 		Manager managerResult = managerMapper.login(manager);
 		if (managerResult != null) {
 			String uuid = UUID.randomUUID().toString();
-			stringRedisTemplate.opsForValue().set("USER_TOKEN_" + uuid, String.valueOf(managerResult.getId()), 30,
-					TimeUnit.MINUTES);
+			stringRedisTemplate.opsForValue().set("USER_TOKEN_" + uuid, String.valueOf(managerResult.getId()), 12,
+					TimeUnit.HOURS);
 			loginResponse.setToken(uuid);
 			loginResponse.setLoginName(managerResult.getName());
 		}
