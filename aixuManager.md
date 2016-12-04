@@ -31,6 +31,7 @@ post
 ```
 ##1.2（新建商家）
 ## http://localhost:8080/manager/createShopper
+x-token
 
 
  ``` 
@@ -60,7 +61,7 @@ post
 
 ##1.3（商家列表）
 ## http://localhost:8080/manager/queryAll
-商家列表
+x-token
 
 ``` 
 get
@@ -122,6 +123,7 @@ get
 }```
 ##1.4（产品列表）
 ## http://localhost:8080/product/all
+x-token
 ``` 
 get
 ``` 
@@ -165,6 +167,7 @@ get
 
 ##1.5（产品删除）
 ## http://localhost:8080/product/delete/{id}
+x-token
 ``` 
 post
 ``` 
@@ -179,6 +182,7 @@ post
 
 ##1.6（产品创建或更新）
 ## http://localhost:8080/product/saveOrUpdate
+x-token
 ``` 
 post
 ``` 
@@ -205,6 +209,7 @@ id: 更新时需要 传递
 ```
 ##1.7（产品信息）
 ## http://localhost:8080/product/get/{id}
+x-token
 ``` 
 post
 ``` 
