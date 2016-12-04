@@ -27,6 +27,14 @@ spring:
     min-evictable-idle-time-millis: 3600000
     max-wait: 60000
 
+spring.redis.host: 139.196.12.123
+spring.redis.port: 6379
+spring.redis.password: redis@QWASZX
+spring.redis.pool.max-active: 2000
+spring.redis.pool.max-wait: 10000
+spring.redis.pool.max-idle: 500
+spring.redis.timeout: 30000
+
 logging:
   file: e://logs/ms-duminjun.log
   level.*: INFO

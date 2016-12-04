@@ -27,7 +27,8 @@ public class ShopperMapper {
 	public ShopperResponse createShopper(Shopper shopper) {
 		ShopperResponse response = new ShopperResponse();
 		String createLoginName = CommonUtils.getRandomLoginName(shopper.getName());
-		String loginName = this.sqlSessionTemplate.selectOne("selectByName", createLoginName);
+		String password = CommonUtils.getRandomLoginPassword();
+		String loginName = this.sqlSessionTemplate.selectOne("selectByName",createLoginName);
 		if (StringUtils.isNullOrEmpty(loginName)) {
 			createLoginName += "_1";
 		} else {
@@ -37,10 +38,10 @@ public class ShopperMapper {
 			createLoginName += "_" + version;
 		}
 		shopper.setLoginName(createLoginName + LOGO);
-		shopper.setLoginPassword(DigestUtils.md2Hex(CommonUtils.getRandomLoginPassword()));
+		shopper.setLoginPassword(DigestUtils.md2Hex(password));
 		if (this.sqlSessionTemplate.insert("createShopper", shopper) > 0) {
 			response.setUserName(shopper.getLoginName());
-			response.setPassword(shopper.getLoginPassword());
+			response.setPassword(password);
 			return response;
 		}
 		return null;

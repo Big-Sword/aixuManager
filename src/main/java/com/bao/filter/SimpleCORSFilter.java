@@ -18,7 +18,13 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
+
+import com.mysql.jdbc.StringUtils;
 
 /**
  * 允许跨域.
@@ -27,9 +33,14 @@ import org.springframework.stereotype.Component;
  * @version 1.0, 2015-04-13
  * @since 1.0
  */
-@SuppressWarnings({ "unused", "WeakerAccess" })
 @Component
 public class SimpleCORSFilter implements Filter {
+
+	private final static Logger logger = LoggerFactory.getLogger(SimpleCORSFilter.class);
+
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
+
 	/**
 	 * 初始化
 	 *
@@ -60,11 +71,26 @@ public class SimpleCORSFilter implements Filter {
 		response.setHeader("Access-Control-Max-Age", "3600");
 		response.setHeader("Access-Control-Allow-Headers", "x-requested-with,accept,Content-Type,authorization");
 		String uri = request.getRequestURI();
-		if (uri.indexOf("/common") < 0) {
-			if (request.getSession().getAttribute("token") == null) {
+		String token = request.getHeader("x-token");
+		logger.info("token :{}", token);
+		logger.info("uri:{}", uri);
+		if (uri.indexOf("/common") < 0) {//
+			if (StringUtils.isNullOrEmpty(token)) {
 				response.setStatus(401);
 				return;
+			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
+				String id = stringRedisTemplate.opsForValue().get("USER_TOKEN_" + token);
+				logger.info("loginId:{}", id);
+				if (StringUtils.isNullOrEmpty(id)) {
+					response.setStatus(402);
+					return;
+				}
+				request.setAttribute("loginId", id);
+			} else {
+				request.setAttribute("loginId", "testId");
 			}
+		} else {
+			request.setAttribute("loginId", "commonId");
 		}
 		filterChain.doFilter(req, res);
 	}

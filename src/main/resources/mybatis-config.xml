@@ -3,13 +3,16 @@
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-config.dtd">
 <configuration>
-    <typeAliases>
-        <package name="com.bao.model"/>
-    </typeAliases>
-    <mappers>
-        <mapper resource="mybatis/Product.xml"/>
-        <mapper resource="mybatis/Manager.xml"/>
-        <mapper resource="mybatis/Shopper.xml"/>
-        
-    </mappers>
+	<settings>
+		<setting name="logImpl" value="LOG4J" />
+	</settings>
+	<typeAliases>
+		<package name="com.bao.model" />
+	</typeAliases>
+	<mappers>
+		<mapper resource="mybatis/Product.xml" />
+		<mapper resource="mybatis/Manager.xml" />
+		<mapper resource="mybatis/Shopper.xml" />
+
+	</mappers>
 </configuration>

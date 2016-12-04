@@ -15,12 +15,8 @@ public class ManagerMapper {
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
-	public long login(Manager manager) {
-		Manager managerResult = this.sqlSessionTemplate.selectOne("selectBySelective", manager);
-		if(managerResult != null) {
-			return managerResult.getId();
-		}
-		return 0L;
+	public Manager login(Manager manager) {
+		return this.sqlSessionTemplate.selectOne("selectBySelective", manager);
 	}
 
 }

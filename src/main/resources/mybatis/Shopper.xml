@@ -38,14 +38,15 @@
 	</insert>
 
 
-	<select id="selectByName" resultMap="BaseResultMap"
+	<select id="selectByName" resultType="java.lang.String"
 		parameterType="java.lang.String">
 		select
 		max(login_name)
 		from shopper
 		where
-		login_name like
-		CONCAT(#{name},'_%')
+		login_name
+		LIKE
+		concat(#{loginName},'_%')
 	</select>
 	<select id="selectAllShopper" resultMap="BaseResultMap">
 		select
