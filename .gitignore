@@ -59,3 +59,4 @@ hs_err_pid*
 *.log
 
 e:/logs/ms-duminjun.log
+*/*/*/application.yml
