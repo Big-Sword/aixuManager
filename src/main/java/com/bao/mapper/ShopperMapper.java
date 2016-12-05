@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bao.controller.msg.PageRequest;
 import com.bao.controller.msg.ShopperResponse;
 import com.bao.model.Shopper;
 import com.bao.utils.CommonUtils;
@@ -24,7 +25,7 @@ public class ShopperMapper {
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	@Transactional
-	public ShopperResponse createShopper(Shopper shopper) {
+	public ShopperResponse createShopper(Shopper shopper) throws Exception{
 		ShopperResponse response = new ShopperResponse();
 		String createLoginName = CommonUtils.getRandomLoginName(shopper.getName());
 		String password = CommonUtils.getRandomLoginPassword();
@@ -47,7 +48,11 @@ public class ShopperMapper {
 		return null;
 	}
 
-	public List<Shopper> getAllInfo() {
-		return this.sqlSessionTemplate.selectList("selectAllShopper");
+	public List<Shopper> getAllInfo(PageRequest pageRequest) {
+		return this.sqlSessionTemplate.selectList("selectAllShopper",pageRequest);
+	}
+	
+	public long countAllShopper() {
+		return this.sqlSessionTemplate.selectOne("countTotalShopper");
 	}
 }

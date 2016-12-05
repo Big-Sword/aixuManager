@@ -63,6 +63,14 @@ post
 ## http://localhost:8080/manager/queryAll
 x-token
 
+  | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| pageIndex            | 页数         | int       |                                          | Y    |
+| pageSize          |    每页数量    | int      |                                          | Y    |
+
+
+
+
 ``` 
 get
 ```                   
@@ -70,7 +78,8 @@ get
 {
   "code": 200,
   "msg": "success",
-  "data": [
+  "data": {
+  "shopperInfos":[
     {
       "id": 1,
       "name": "上海",
@@ -119,20 +128,31 @@ get
       "createdAt": 1480822239000,
       "updatedAt": 1480822239000
     }
-     ]
-}```
+     ],
+     total:4
+   }
+}
+```
 ##1.4（产品列表）
 ## http://localhost:8080/product/all
 x-token
+
 ``` 
 get
 ``` 
+
+  | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| pageIndex            | 页数         | int       |                                          | Y    |
+| pageSize          |    每页数量    | int      |                                          | Y    |
+
 
 ``` 
 {
   "code": 200,
   "msg": "success",
-  "data": [
+  "data": {
+   "productInfos":[
     {
       "id": 2,
       "name": "假的",
@@ -161,7 +181,9 @@ get
       "createdAt": 1480769581000,
       "updatedAt": 1480769581000
     }
-  ]
+  ],
+  total:2
+  }
 }
 ```
 
