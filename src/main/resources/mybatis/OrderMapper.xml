@@ -10,16 +10,15 @@
     <result column="contact" property="contact" jdbcType="CHAR" />
     <result column="address" property="address" jdbcType="CHAR" />
     <result column="status" property="status" jdbcType="TINYINT" />
-    <result column="delivery_time" property="deliveryTime" jdbcType="BIGINT" />
-    <result column="wedding_time" property="weddingTime" jdbcType="BIGINT" />
-    <result column="order_time" property="orderTime" jdbcType="BIGINT" />
+    <result column="delivery_time" property="deliveryTime"/>
+    <result column="wedding_time" property="weddingTime"/>
+    <result column="order_time" property="orderTime"/>
     <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
-    <result column="created_at" property="createdAt"/>
     <result column="updated_at" property="updatedAt"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_num, shopper_id, order_price, customer, contact, address, status, delivery_time, 
-    wedding_time, order_time, is_delete, created_at, updated_at
+    wedding_time, order_time, is_delete, updated_at
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
@@ -31,19 +30,19 @@
     delete from orders
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.bao.model.Orders" >
+  <insert id="insert" parameterType="com.bao.model.Orders" useGeneratedKeys="true" keyProperty="id">
     insert into orders (id, order_num, shopper_id, 
       order_price, customer, contact, 
       address, status, delivery_time, 
       wedding_time, order_time, is_delete, 
-      created_at, updated_at)
+      updated_at)
     values (#{id,jdbcType=BIGINT}, #{orderNum,jdbcType=CHAR}, #{shopperId,jdbcType=BIGINT}, 
       #{orderPrice,jdbcType=DECIMAL}, #{customer,jdbcType=CHAR}, #{contact,jdbcType=CHAR}, 
-      #{address,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{deliveryTime,jdbcType=BIGINT}, 
-      #{weddingTime,jdbcType=BIGINT}, #{orderTime,jdbcType=BIGINT}, #{isDelete,jdbcType=TINYINT}, 
-      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+      #{address,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{deliveryTime},
+      #{weddingTime}, #{orderTime}, #{isDelete,jdbcType=TINYINT},
+      #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bao.model.Orders" >
+  <insert id="insertSelective" parameterType="com.bao.model.Orders"  useGeneratedKeys="true" keyProperty="id">
     insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -82,9 +81,6 @@
       <if test="isDelete != null" >
         is_delete,
       </if>
-      <if test="createdAt != null" >
-        created_at,
-      </if>
       <if test="updatedAt != null" >
         updated_at,
       </if>
@@ -115,19 +111,16 @@
         #{status,jdbcType=TINYINT},
       </if>
       <if test="deliveryTime != null" >
-        #{deliveryTime,jdbcType=BIGINT},
+        #{deliveryTime},
       </if>
       <if test="weddingTime != null" >
-        #{weddingTime,jdbcType=BIGINT},
+        #{weddingTime},
       </if>
       <if test="orderTime != null" >
-        #{orderTime,jdbcType=BIGINT},
+        #{orderTime},
       </if>
       <if test="isDelete != null" >
         #{isDelete,jdbcType=TINYINT},
-      </if>
-      <if test="createdAt != null" >
-        #{createdAt,jdbcType=TIMESTAMP},
       </if>
       <if test="updatedAt != null" >
         #{updatedAt,jdbcType=TIMESTAMP},
@@ -159,19 +152,16 @@
         status = #{status,jdbcType=TINYINT},
       </if>
       <if test="deliveryTime != null" >
-        delivery_time = #{deliveryTime,jdbcType=BIGINT},
+        delivery_time = #{deliveryTime},
       </if>
       <if test="weddingTime != null" >
-        wedding_time = #{weddingTime,jdbcType=BIGINT},
+        wedding_time = #{weddingTime},
       </if>
       <if test="orderTime != null" >
-        order_time = #{orderTime,jdbcType=BIGINT},
+        order_time = #{orderTime},
       </if>
       <if test="isDelete != null" >
         is_delete = #{isDelete,jdbcType=TINYINT},
-      </if>
-      <if test="createdAt != null" >
-        created_at = #{createdAt,jdbcType=TIMESTAMP},
       </if>
       <if test="updatedAt != null" >
         updated_at = #{updatedAt,jdbcType=TIMESTAMP},
@@ -188,11 +178,10 @@
       contact = #{contact,jdbcType=CHAR},
       address = #{address,jdbcType=CHAR},
       status = #{status,jdbcType=TINYINT},
-      delivery_time = #{deliveryTime,jdbcType=BIGINT},
-      wedding_time = #{weddingTime,jdbcType=BIGINT},
-      order_time = #{orderTime,jdbcType=BIGINT},
+      delivery_time = #{deliveryTime},
+      wedding_time = #{weddingTime},
+      order_time = #{orderTime},
       is_delete = #{isDelete,jdbcType=TINYINT},
-      created_at = #{createdAt,jdbcType=TIMESTAMP},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>

@@ -16,7 +16,6 @@ public class OrderDetail {
 	private Integer productCount;//商品数量
 
 	private int isDelete;
-	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
 	public Long getId() {
@@ -59,13 +58,6 @@ public class OrderDetail {
 		this.isDelete = isDelete;
 	}
 
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
-	}
 
 	public Timestamp getUpdatedAt() {
 		return updatedAt;
@@ -83,7 +75,6 @@ public class OrderDetail {
 				", productId=" + productId +
 				", productCount=" + productCount +
 				", isDelete=" + isDelete +
-				", createdAt=" + createdAt +
 				", updatedAt=" + updatedAt +
 				'}';
 	}

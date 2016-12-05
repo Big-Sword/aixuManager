@@ -29,7 +29,7 @@ public class ShopperMapper {
 		ShopperResponse response = new ShopperResponse();
 		String createLoginName = CommonUtils.getRandomLoginName(shopper.getName());
 		String password = CommonUtils.getRandomLoginPassword();
-		String loginName = this.sqlSessionTemplate.selectOne("selectByName",createLoginName);
+		String loginName = this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.selectByName",createLoginName);
 		if (StringUtils.isNullOrEmpty(loginName)) {
 			createLoginName += "_1";
 		} else {
@@ -40,7 +40,7 @@ public class ShopperMapper {
 		}
 		shopper.setLoginName(createLoginName + LOGO);
 		shopper.setLoginPassword(DigestUtils.md2Hex(password));
-		if (this.sqlSessionTemplate.insert("createShopper", shopper) > 0) {
+		if (this.sqlSessionTemplate.insert("com.bao.model.Shopper.createShopper", shopper) > 0) {
 			response.setUserName(shopper.getLoginName());
 			response.setPassword(password);
 			return response;
@@ -49,10 +49,14 @@ public class ShopperMapper {
 	}
 
 	public List<Shopper> getAllInfo(PageRequest pageRequest) {
-		return this.sqlSessionTemplate.selectList("selectAllShopper",pageRequest);
+		return this.sqlSessionTemplate.selectList("com.bao.model.Shopper.selectAllShopper",pageRequest);
 	}
 	
 	public long countAllShopper() {
-		return this.sqlSessionTemplate.selectOne("countTotalShopper");
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.countTotalShopper");
+	}
+
+	public Shopper selectByPrimaryKey(Long id){
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.selectByPrimaryKey",id);
 	}
 }

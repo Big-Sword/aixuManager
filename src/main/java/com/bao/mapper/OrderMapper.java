@@ -14,15 +14,15 @@ public class OrderMapper {
     private SqlSessionTemplate sqlSessionTemplate;
 
     public int deleteByPrimaryKey(Long id){
-        return this.sqlSessionTemplate.delete("deleteByPrimaryKey",id);
+        return this.sqlSessionTemplate.delete("com.bao.mapper.OrderMapper.deleteByPrimaryKey",id);
     }
 
-    public int insert(Orders record){
-        return this.sqlSessionTemplate.insert("insert",record);
+    public long insert(Orders record){
+        return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insert",record);
     }
 
-    public int insertSelective(Orders record){
-        return this.sqlSessionTemplate.insert("insertSelective",record);
+    public long insertSelective(Orders record){
+        return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insertSelective",record);
     }
 
     public Orders selectByPrimaryKey(Long id){
@@ -30,10 +30,10 @@ public class OrderMapper {
     }
 
     public int updateByPrimaryKeySelective(Orders record){
-        return this.sqlSessionTemplate.update("updateByPrimaryKeySelective",record);
+        return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKeySelective",record);
     }
 
     public int updateByPrimaryKey(Orders record){
-        return this.sqlSessionTemplate.update("updateByPrimaryKey",record);
+        return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKey",record);
     }
 }

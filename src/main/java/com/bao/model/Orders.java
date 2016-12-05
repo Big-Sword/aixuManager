@@ -18,12 +18,11 @@ public class Orders {
 	private String contact;//联系方式
 	private String address;//地址
 	private Integer status;//订单状态
-	private Long deliveryTime;//送货时间
-	private Long weddingTime;//婚礼时间
-	private Long orderTime;//下单时间
+	private Timestamp deliveryTime;//送货时间
+	private Timestamp weddingTime;//婚礼时间
+	private Timestamp orderTime;//下单时间
 
 	private int isDelete;
-	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
 	public Long getId() {
@@ -90,27 +89,27 @@ public class Orders {
 		this.status = status;
 	}
 
-	public Long getDeliveryTime() {
+	public Timestamp getDeliveryTime() {
 		return deliveryTime;
 	}
 
-	public void setDeliveryTime(Long deliveryTime) {
+	public void setDeliveryTime(Timestamp deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 
-	public Long getWeddingTime() {
+	public Timestamp getWeddingTime() {
 		return weddingTime;
 	}
 
-	public void setWeddingTime(Long weddingTime) {
+	public void setWeddingTime(Timestamp weddingTime) {
 		this.weddingTime = weddingTime;
 	}
 
-	public Long getOrderTime() {
+	public Timestamp getOrderTime() {
 		return orderTime;
 	}
 
-	public void setOrderTime(Long orderTime) {
+	public void setOrderTime(Timestamp orderTime) {
 		this.orderTime = orderTime;
 	}
 
@@ -120,14 +119,6 @@ public class Orders {
 
 	public void setIsDelete(int isDelete) {
 		this.isDelete = isDelete;
-	}
-
-	public Timestamp getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(Timestamp createdAt) {
-		this.createdAt = createdAt;
 	}
 
 	public Timestamp getUpdatedAt() {
@@ -153,7 +144,6 @@ public class Orders {
 				", weddingTime=" + weddingTime +
 				", orderTime=" + orderTime +
 				", isDelete=" + isDelete +
-				", createdAt=" + createdAt +
 				", updatedAt=" + updatedAt +
 				'}';
 	}
