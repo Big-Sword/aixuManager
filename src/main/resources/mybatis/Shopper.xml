@@ -48,11 +48,15 @@
 		LIKE
 		concat(#{loginName},'_%')
 	</select>
-	<select id="selectAllShopper" resultMap="BaseResultMap">
+	<select id="selectAllShopper" resultMap="BaseResultMap" parameterType="com.bao.controller.msg.PageRequest">
 		select
 		<include refid="Base_Column_List" />
 		from shopper
-		where is_delete = 0
+		where is_delete = 0 limit #{pageIndex},#{pageSize}
+	</select>
+	
+	<select id="countTotalShopper" resultType="java.lang.Long">
+	 select count(1) from shopper where is_delete = 0
 	</select>
 
 </mapper>

@@ -34,12 +34,7 @@
 		,is_delete
 	</sql>
 
-	<select id="selectAll" resultMap="BaseResultMap">
-		select
-		<include refid="Base_Column_List" />
-		from product
-		where is_delete = 0
-	</select>
+	
 
 	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -51,7 +46,8 @@
 	<insert id="createProduct" parameterType="com.bao.model.Product"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into product(
-		<include refid="Base_Column_List" />)
+		<include refid="Base_Column_List" />
+		)
 		values(null,#{name},#{picUrl},#{content},#{price},#{stock},#{modelType},#{colourType},#{remark},null,null,0)
 	</insert>
 
@@ -88,5 +84,17 @@
 		is_delete = 1 where id = #{id}
 	</update>
 
+	<select id="selectAll" resultMap="BaseResultMap"
+		parameterType="com.bao.controller.msg.PageRequest">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0 limit
+		#{pageIndex},#{pageSize}
+	</select>
+
+	<select id="countTotalProduct" resultType="java.lang.Long">
+		select count(1) from product where is_delete = 0
+	</select>
 
 </mapper>
