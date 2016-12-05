@@ -10,27 +10,27 @@ import java.sql.Timestamp;
  */
 @Data
 public class Order {
-	private long id;
+	private Long id;
 	private String orderNum;//订单号
-	private long shopperId;
+	private Long shopperId;
 	private BigDecimal orderPrice;//订单总额
 	private String customer;//收货人
 	private String contact;//联系方式
 	private String address;//地址
-	private int status;//订单状态
-	private long deliveryTime;//送货时间
-	private long weddingTime;//婚礼时间
-	private long orderTime;//下单时间
+	private Integer status;//订单状态
+	private Long deliveryTime;//送货时间
+	private Long weddingTime;//婚礼时间
+	private Long orderTime;//下单时间
 
 	private int isDelete;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 
-	public long getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -42,11 +42,11 @@ public class Order {
 		this.orderNum = orderNum;
 	}
 
-	public long getShopperId() {
+	public Long getShopperId() {
 		return shopperId;
 	}
 
-	public void setShopperId(long shopperId) {
+	public void setShopperId(Long shopperId) {
 		this.shopperId = shopperId;
 	}
 
@@ -82,35 +82,35 @@ public class Order {
 		this.address = address;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 
-	public long getDeliveryTime() {
+	public Long getDeliveryTime() {
 		return deliveryTime;
 	}
 
-	public void setDeliveryTime(long deliveryTime) {
+	public void setDeliveryTime(Long deliveryTime) {
 		this.deliveryTime = deliveryTime;
 	}
 
-	public long getWeddingTime() {
+	public Long getWeddingTime() {
 		return weddingTime;
 	}
 
-	public void setWeddingTime(long weddingTime) {
+	public void setWeddingTime(Long weddingTime) {
 		this.weddingTime = weddingTime;
 	}
 
-	public long getOrderTime() {
+	public Long getOrderTime() {
 		return orderTime;
 	}
 
-	public void setOrderTime(long orderTime) {
+	public void setOrderTime(Long orderTime) {
 		this.orderTime = orderTime;
 	}
 

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bao.mapper.OrderMapper" >
+  <resultMap id="BaseResultMap" type="com.bao.model.Order" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="order_num" property="orderNum" jdbcType="CHAR" />
+    <result column="shopper_id" property="shopperId" jdbcType="BIGINT" />
+    <result column="order_price" property="orderPrice" jdbcType="DECIMAL" />
+    <result column="customer" property="customer" jdbcType="CHAR" />
+    <result column="contact" property="contact" jdbcType="CHAR" />
+    <result column="address" property="address" jdbcType="CHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="delivery_time" property="deliveryTime" jdbcType="BIGINT" />
+    <result column="wedding_time" property="weddingTime" jdbcType="BIGINT" />
+    <result column="order_time" property="orderTime" jdbcType="BIGINT" />
+    <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
+    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
+    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, order_num, shopper_id, order_price, customer, contact, address, status, delivery_time, 
+    wedding_time, order_time, is_delete, created_at, updated_at
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from order
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from order
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.bao.model.Order" >
+    insert into order (id, order_num, shopper_id, 
+      order_price, customer, contact, 
+      address, status, delivery_time, 
+      wedding_time, order_time, is_delete, 
+      created_at, updated_at)
+    values (#{id,jdbcType=BIGINT}, #{orderNum,jdbcType=CHAR}, #{shopperId,jdbcType=BIGINT}, 
+      #{orderPrice,jdbcType=DECIMAL}, #{customer,jdbcType=CHAR}, #{contact,jdbcType=CHAR}, 
+      #{address,jdbcType=CHAR}, #{status,jdbcType=TINYINT}, #{deliveryTime,jdbcType=BIGINT}, 
+      #{weddingTime,jdbcType=BIGINT}, #{orderTime,jdbcType=BIGINT}, #{isDelete,jdbcType=TINYINT}, 
+      #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.bao.model.Order" >
+    insert into order
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="orderNum != null" >
+        order_num,
+      </if>
+      <if test="shopperId != null" >
+        shopper_id,
+      </if>
+      <if test="orderPrice != null" >
+        order_price,
+      </if>
+      <if test="customer != null" >
+        customer,
+      </if>
+      <if test="contact != null" >
+        contact,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time,
+      </if>
+      <if test="weddingTime != null" >
+        wedding_time,
+      </if>
+      <if test="orderTime != null" >
+        order_time,
+      </if>
+      <if test="isDelete != null" >
+        is_delete,
+      </if>
+      <if test="createdAt != null" >
+        created_at,
+      </if>
+      <if test="updatedAt != null" >
+        updated_at,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="orderNum != null" >
+        #{orderNum,jdbcType=CHAR},
+      </if>
+      <if test="shopperId != null" >
+        #{shopperId,jdbcType=BIGINT},
+      </if>
+      <if test="orderPrice != null" >
+        #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="customer != null" >
+        #{customer,jdbcType=CHAR},
+      </if>
+      <if test="contact != null" >
+        #{contact,jdbcType=CHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deliveryTime != null" >
+        #{deliveryTime,jdbcType=BIGINT},
+      </if>
+      <if test="weddingTime != null" >
+        #{weddingTime,jdbcType=BIGINT},
+      </if>
+      <if test="orderTime != null" >
+        #{orderTime,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null" >
+        #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createdAt != null" >
+        #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.bao.model.Order" >
+    update order
+    <set >
+      <if test="orderNum != null" >
+        order_num = #{orderNum,jdbcType=CHAR},
+      </if>
+      <if test="shopperId != null" >
+        shopper_id = #{shopperId,jdbcType=BIGINT},
+      </if>
+      <if test="orderPrice != null" >
+        order_price = #{orderPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="customer != null" >
+        customer = #{customer,jdbcType=CHAR},
+      </if>
+      <if test="contact != null" >
+        contact = #{contact,jdbcType=CHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=CHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="deliveryTime != null" >
+        delivery_time = #{deliveryTime,jdbcType=BIGINT},
+      </if>
+      <if test="weddingTime != null" >
+        wedding_time = #{weddingTime,jdbcType=BIGINT},
+      </if>
+      <if test="orderTime != null" >
+        order_time = #{orderTime,jdbcType=BIGINT},
+      </if>
+      <if test="isDelete != null" >
+        is_delete = #{isDelete,jdbcType=TINYINT},
+      </if>
+      <if test="createdAt != null" >
+        created_at = #{createdAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updatedAt != null" >
+        updated_at = #{updatedAt,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.bao.model.Order" >
+    update order
+    set order_num = #{orderNum,jdbcType=CHAR},
+      shopper_id = #{shopperId,jdbcType=BIGINT},
+      order_price = #{orderPrice,jdbcType=DECIMAL},
+      customer = #{customer,jdbcType=CHAR},
+      contact = #{contact,jdbcType=CHAR},
+      address = #{address,jdbcType=CHAR},
+      status = #{status,jdbcType=TINYINT},
+      delivery_time = #{deliveryTime,jdbcType=BIGINT},
+      wedding_time = #{weddingTime,jdbcType=BIGINT},
+      order_time = #{orderTime,jdbcType=BIGINT},
+      is_delete = #{isDelete,jdbcType=TINYINT},
+      created_at = #{createdAt,jdbcType=TIMESTAMP},
+      updated_at = #{updatedAt,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+</mapper>
