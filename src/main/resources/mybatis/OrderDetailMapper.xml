@@ -7,8 +7,8 @@
     <result column="product_id" jdbcType="BIGINT" property="productId" />
     <result column="product_count" jdbcType="INTEGER" property="productCount" />
     <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
-    <result column="created_at" jdbcType="TIMESTAMP" property="createdAt" />
-    <result column="updated_at" jdbcType="TIMESTAMP" property="updatedAt" />
+    <result column="created_at" property="createdAt" />
+    <result column="updated_at" property="updatedAt" />
   </resultMap>
   <sql id="Base_Column_List">
     id, order_id, product_id, product_count, is_delete, created_at, updated_at

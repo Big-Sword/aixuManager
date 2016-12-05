@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.bao.mapper.OrderMapper" >
-  <resultMap id="BaseResultMap" type="com.bao.model.Order" >
+  <resultMap id="BaseResultMap" type="com.bao.model.Orders" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="order_num" property="orderNum" jdbcType="CHAR" />
     <result column="shopper_id" property="shopperId" jdbcType="BIGINT" />
@@ -14,8 +14,8 @@
     <result column="wedding_time" property="weddingTime" jdbcType="BIGINT" />
     <result column="order_time" property="orderTime" jdbcType="BIGINT" />
     <result column="is_delete" property="isDelete" jdbcType="TINYINT" />
-    <result column="created_at" property="createdAt" jdbcType="TIMESTAMP" />
-    <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP" />
+    <result column="created_at" property="createdAt"/>
+    <result column="updated_at" property="updatedAt"/>
   </resultMap>
   <sql id="Base_Column_List" >
     id, order_num, shopper_id, order_price, customer, contact, address, status, delivery_time, 
@@ -24,15 +24,15 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select 
     <include refid="Base_Column_List" />
-    from order
+    from orders
     where id = #{id,jdbcType=BIGINT}
   </select>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from order
+    delete from orders
     where id = #{id,jdbcType=BIGINT}
   </delete>
-  <insert id="insert" parameterType="com.bao.model.Order" >
-    insert into order (id, order_num, shopper_id, 
+  <insert id="insert" parameterType="com.bao.model.Orders" >
+    insert into orders (id, order_num, shopper_id, 
       order_price, customer, contact, 
       address, status, delivery_time, 
       wedding_time, order_time, is_delete, 
@@ -43,8 +43,8 @@
       #{weddingTime,jdbcType=BIGINT}, #{orderTime,jdbcType=BIGINT}, #{isDelete,jdbcType=TINYINT}, 
       #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.bao.model.Order" >
-    insert into order
+  <insert id="insertSelective" parameterType="com.bao.model.Orders" >
+    insert into orders
     <trim prefix="(" suffix=")" suffixOverrides="," >
       <if test="id != null" >
         id,
@@ -134,8 +134,8 @@
       </if>
     </trim>
   </insert>
-  <update id="updateByPrimaryKeySelective" parameterType="com.bao.model.Order" >
-    update order
+  <update id="updateByPrimaryKeySelective" parameterType="com.bao.model.Orders" >
+    update orders
     <set >
       <if test="orderNum != null" >
         order_num = #{orderNum,jdbcType=CHAR},
@@ -179,8 +179,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.bao.model.Order" >
-    update order
+  <update id="updateByPrimaryKey" parameterType="com.bao.model.Orders" >
+    update orders
     set order_num = #{orderNum,jdbcType=CHAR},
       shopper_id = #{shopperId,jdbcType=BIGINT},
       order_price = #{orderPrice,jdbcType=DECIMAL},

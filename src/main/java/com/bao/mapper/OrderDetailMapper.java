@@ -2,17 +2,38 @@ package com.bao.mapper;
 
 
 import com.bao.model.OrderDetail;
+import lombok.extern.slf4j.Slf4j;
+import org.mybatis.spring.SqlSessionTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public interface OrderDetailMapper {
-    int deleteByPrimaryKey(Long id);
+@Component
+@Slf4j
+public class OrderDetailMapper {
+    @Autowired
+    private SqlSessionTemplate sqlSessionTemplate;
 
-    int insert(OrderDetail record);
+    public int deleteByPrimaryKey(Long id){
+        return this.sqlSessionTemplate.delete("deleteByPrimaryKey",id);
+    }
 
-    int insertSelective(OrderDetail record);
+    public int insert(OrderDetail record){
+        return this.sqlSessionTemplate.insert("insert",record);
+    }
 
-    OrderDetail selectByPrimaryKey(Long id);
+    public int insertSelective(OrderDetail record){
+        return this.sqlSessionTemplate.insert("insertSelective",record);
+    }
 
-    int updateByPrimaryKeySelective(OrderDetail record);
+    public OrderDetail selectByPrimaryKey(Long id){
+        return this.sqlSessionTemplate.selectOne("selectByPrimaryKey",id);
+    }
 
-    int updateByPrimaryKey(OrderDetail record);
+    public int updateByPrimaryKeySelective(OrderDetail record){
+        return this.sqlSessionTemplate.update("updateByPrimaryKeySelective",record);
+    }
+
+    public int updateByPrimaryKey(OrderDetail record){
+        return this.sqlSessionTemplate.update("updateByPrimaryKey",record);
+    }
 }

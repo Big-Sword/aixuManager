@@ -9,7 +9,7 @@ import java.sql.Timestamp;
  * Created by asus on 2016/6/28.
  */
 @Data
-public class Order {
+public class Orders {
 	private Long id;
 	private String orderNum;//订单号
 	private Long shopperId;
@@ -140,7 +140,7 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order{" +
+		return "Orders{" +
 				"id=" + id +
 				", orderNum='" + orderNum + '\'' +
 				", shopperId=" + shopperId +

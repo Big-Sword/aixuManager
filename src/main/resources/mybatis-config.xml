@@ -13,6 +13,7 @@
 		<mapper resource="mybatis/Product.xml" />
 		<mapper resource="mybatis/Manager.xml" />
 		<mapper resource="mybatis/Shopper.xml" />
-
+		<mapper resource="mybatis/OrderMapper.xml" />
+		<mapper resource="mybatis/OrderDetailMapper.xml" />
 	</mappers>
 </configuration>
