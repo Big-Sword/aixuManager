@@ -66,6 +66,12 @@ public class SimpleCORSFilter implements Filter {
 			throws IOException, ServletException {
 		final HttpServletResponse response = (HttpServletResponse) res;
 		final HttpServletRequest request = (HttpServletRequest) req;
+
+		if(request.getMethod().equalsIgnoreCase("options")){
+			response.setStatus(200);
+			return;
+		}
+
 		response.setHeader("Access-Control-Allow-Origin", "*");
 		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
 		response.setHeader("Access-Control-Max-Age", "3600");
