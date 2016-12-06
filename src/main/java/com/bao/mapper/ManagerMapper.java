@@ -16,7 +16,7 @@ public class ManagerMapper {
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	public Manager login(Manager manager) throws Exception{
-		return this.sqlSessionTemplate.selectOne("selectBySelective", manager);
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Manager.selectBySelective", manager);
 	}
 
 }

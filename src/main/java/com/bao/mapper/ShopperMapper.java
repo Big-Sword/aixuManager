@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class ShopperMapper {
+<<<<<<< HEAD
   private static final String LOGO = "@AIXU";
 
   @Autowired
@@ -62,4 +63,46 @@ public class ShopperMapper {
   public int countAllShopper(DataTableReqInfo dataTableReqInfo) {
     return this.sqlSessionTemplate.selectOne("countTotalShopper", dataTableReqInfo);
   }
+=======
+	private static final String LOGO = "@AIXU";
+
+	@Autowired
+	private SqlSessionTemplate sqlSessionTemplate;
+
+	@Transactional
+	public ShopperResponse createShopper(Shopper shopper) throws Exception{
+		ShopperResponse response = new ShopperResponse();
+		String createLoginName = CommonUtils.getRandomLoginName(shopper.getName());
+		String password = CommonUtils.getRandomLoginPassword();
+		String loginName = this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.selectByName",createLoginName);
+		if (StringUtils.isNullOrEmpty(loginName)) {
+			createLoginName += "_1";
+		} else {
+			int version = Integer
+					.parseInt(loginName.substring(loginName.lastIndexOf("_") + 1, loginName.indexOf(LOGO)));
+			version++;
+			createLoginName += "_" + version;
+		}
+		shopper.setLoginName(createLoginName + LOGO);
+		shopper.setLoginPassword(DigestUtils.md2Hex(password));
+		if (this.sqlSessionTemplate.insert("com.bao.model.Shopper.createShopper", shopper) > 0) {
+			response.setUserName(shopper.getLoginName());
+			response.setPassword(password);
+			return response;
+		}
+		return null;
+	}
+
+	public List<Shopper> getAllInfo(PageRequest pageRequest) {
+		return this.sqlSessionTemplate.selectList("com.bao.model.Shopper.selectAllShopper",pageRequest);
+	}
+	
+	public long countAllShopper() {
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.countTotalShopper");
+	}
+
+	public Shopper selectByPrimaryKey(Long id){
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.selectByPrimaryKey",id);
+	}
+>>>>>>> origin/master
 }

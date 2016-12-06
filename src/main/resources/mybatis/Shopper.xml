@@ -68,4 +68,10 @@
 		</if>
 	</select>
 
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+		select
+		<include refid="Base_Column_List" />
+		from shopper
+		where id = #{id} and is_delete = 0
+	</select>
 </mapper>
