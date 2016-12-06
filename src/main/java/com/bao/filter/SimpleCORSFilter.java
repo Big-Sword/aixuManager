@@ -18,13 +18,12 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
-
-import com.mysql.jdbc.StringUtils;
 
 /**
  * 允许跨域.
@@ -67,7 +66,7 @@ public class SimpleCORSFilter implements Filter {
 		final HttpServletResponse response = (HttpServletResponse) res;
 		final HttpServletRequest request = (HttpServletRequest) req;
 
-		if(request.getMethod().equalsIgnoreCase("options")){
+		if (request.getMethod().equalsIgnoreCase("options")) {
 			response.setStatus(200);
 			return;
 		}
@@ -81,17 +80,18 @@ public class SimpleCORSFilter implements Filter {
 		logger.info("token :{}", token);
 		logger.info("uri:{}", uri);
 		if (uri.indexOf("/common") < 0) {//
-			if (StringUtils.isNullOrEmpty(token)) {
+			if (StringUtils.isBlank(token)) {
 				response.setStatus(401);
 				return;
 			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
 				String id = stringRedisTemplate.opsForValue().get("USER_TOKEN_" + token);
 				logger.info("loginId:{}", id);
-				if (StringUtils.isNullOrEmpty(id)) {
+				if (StringUtils.isBlank(id)) {
 					response.setStatus(402);
 					return;
 				}
 				request.setAttribute("loginId", id);
+				request.setAttribute("token", token);
 			} else {
 				request.setAttribute("loginId", "testId");
 			}

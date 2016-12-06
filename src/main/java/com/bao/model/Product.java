@@ -1,9 +1,8 @@
 package com.bao.model;
 
-import lombok.Data;
-
-import java.math.BigDecimal;
 import java.sql.Timestamp;
+
+import lombok.Data;
 
 /**
  * Created by asus on 2016/6/28.
@@ -11,14 +10,14 @@ import java.sql.Timestamp;
 @Data
 public class Product {
 	private long id;
-	private String name;// 名称
-	private String picUrl;// 图片
-	private String content;// 内容
-	private BigDecimal price;// 价格
+	private String name = "";// 名称
+	private String picUrl = "";// 图片
+	private String content = "";// 内容
+	private Double price;// 价格
 	private int stock;// 库存
-	private String modelType;// 型号
-	private String colourType;// 色号
-	private String remark;// 备注
+	private String modelType = "";// 型号
+	private String colourType = "";// 色号
+	private String remark = "";// 备注
 	private int isDelete;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
@@ -55,11 +54,11 @@ public class Product {
 		this.content = content;
 	}
 
-	public BigDecimal getPrice() {
+	public Double getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(Double price) {
 		this.price = price;
 	}
 
@@ -118,7 +117,6 @@ public class Product {
 	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
 	}
-
 
 	@Override
 	public String toString() {

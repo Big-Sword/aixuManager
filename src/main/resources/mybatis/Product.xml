@@ -84,13 +84,11 @@
 		is_delete = 1 where id = #{id}
 	</update>
 
-	<select id="selectAll" resultMap="BaseResultMap"
-		parameterType="com.bao.controller.msg.PageRequest">
+	<select id="selectAll" resultMap="BaseResultMap" parameterType="com.bao.controller.msg.PageRequest">
 		select
 		<include refid="Base_Column_List" />
 		from product
-		where is_delete = 0 limit
-		#{pageIndex},#{pageSize}
+		where is_delete = 0 limit #{pageIndex},#{pageSize}
 	</select>
 
 	<select id="countTotalProduct" resultType="java.lang.Long">

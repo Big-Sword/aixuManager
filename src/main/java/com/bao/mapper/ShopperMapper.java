@@ -19,26 +19,26 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class ShopperMapper {
-	private static final String LOGO = "@AIXU";
 
 	@Autowired
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	@Transactional
-	public ShopperResponse createShopper(Shopper shopper) throws Exception{
+	public ShopperResponse createShopper(Shopper shopper) throws Exception {
 		ShopperResponse response = new ShopperResponse();
-		String createLoginName = CommonUtils.getRandomLoginName(shopper.getName());
+		String contactWay = shopper.getContactWay();
 		String password = CommonUtils.getRandomLoginPassword();
-		String loginName = this.sqlSessionTemplate.selectOne("selectByName",createLoginName);
-		if (StringUtils.isNullOrEmpty(loginName)) {
-			createLoginName += "_1";
-		} else {
-			int version = Integer
-					.parseInt(loginName.substring(loginName.lastIndexOf("_") + 1, loginName.indexOf(LOGO)));
-			version++;
-			createLoginName += "_" + version;
+		String loginName = this.sqlSessionTemplate.selectOne("selectByContactWay", contactWay);
+		if (!StringUtils.isNullOrEmpty(loginName)) {
+			if (loginName.equals(contactWay)) {
+				contactWay += "_1";
+			} else {
+				int version = Integer.parseInt(loginName.substring(loginName.lastIndexOf("_") + 1));
+				version++;
+				contactWay += "_" + version;
+			}
 		}
-		shopper.setLoginName(createLoginName + LOGO);
+		shopper.setLoginName(contactWay);
 		shopper.setLoginPassword(DigestUtils.md2Hex(password));
 		if (this.sqlSessionTemplate.insert("createShopper", shopper) > 0) {
 			response.setUserName(shopper.getLoginName());
@@ -49,10 +49,21 @@ public class ShopperMapper {
 	}
 
 	public List<Shopper> getAllInfo(PageRequest pageRequest) {
-		return this.sqlSessionTemplate.selectList("selectAllShopper",pageRequest);
+		return this.sqlSessionTemplate.selectList("selectAllShopper", pageRequest);
 	}
-	
+
 	public long countAllShopper() {
 		return this.sqlSessionTemplate.selectOne("countTotalShopper");
 	}
+
+	@Transactional
+	public Shopper loginShopper(Shopper shopper) throws Exception {
+
+		return this.sqlSessionTemplate.selectOne("loginShopper", shopper);
+	}
+
+	public int updatePassword(Shopper shopper) throws Exception {
+		return this.sqlSessionTemplate.update("updateShopperPassword", shopper);
+	}
+
 }

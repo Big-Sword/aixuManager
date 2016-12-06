@@ -27,7 +27,7 @@ public class ProductMapper {
 	private SqlSessionTemplate sqlSessionTemplate;
 
 	public List<Product> selectAll(PageRequest pageRequest) {
-		return this.sqlSessionTemplate.selectList("selectAll", pageRequest);
+		return this.sqlSessionTemplate.selectList("selectAll",pageRequest);
 	}
 
 	public boolean saveOrUpdate(Product product) throws Exception {

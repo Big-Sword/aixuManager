@@ -12,6 +12,7 @@
 		<result column="contact_way" property="contactWay" />
 		<result column="login_name" property="loginName" />
 		<result column="login_password" property="loginPassword" />
+	    <result column="login_times" property="loginTimes" />
 		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
 		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
 		<result column="is_delete" property="isDelete" />
@@ -24,6 +25,7 @@
 		,contact_way
 		,login_name
 		,login_password
+		,login_times
 		,created_at
 		,updated_at
 		,is_delete
@@ -36,27 +38,40 @@
 		)
 		values(null,#{name},#{address},#{contactName},#{contactWay},#{loginName},#{loginPassword},null,null,0)
 	</insert>
-
-
 	<select id="selectByName" resultType="java.lang.String"
 		parameterType="java.lang.String">
 		select
-		max(login_name)
+		max(contact_way)
 		from shopper
 		where
-		login_name
+		contact_way
 		LIKE
-		concat(#{loginName},'_%')
+		concat(#{contactWay},'_%') for update
 	</select>
-	<select id="selectAllShopper" resultMap="BaseResultMap" parameterType="com.bao.controller.msg.PageRequest">
+	<select id="selectAllShopper" resultMap="BaseResultMap"
+		parameterType="com.bao.controller.msg.PageRequest">
 		select
 		<include refid="Base_Column_List" />
 		from shopper
 		where is_delete = 0 limit #{pageIndex},#{pageSize}
 	</select>
-	
+
 	<select id="countTotalShopper" resultType="java.lang.Long">
-	 select count(1) from shopper where is_delete = 0
+		select count(1) from
+		shopper where is_delete = 0
 	</select>
+
+	<select id="loginShopper" resultMap="BaseResultMap"
+		parameterType="com.bao.model.Shopper">
+		select * from shopper where login_name =
+		#{loginName} and
+		login_password = #{loginPassword}
+	</select>
+	
+	<update id="updateShopperPassword" parameterType="com.bao.model.Shopper">
+		update shopper
+		set login_password = #{loginPassword} where id = #{id}
+	</update>
+
 
 </mapper>

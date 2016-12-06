@@ -10,8 +10,8 @@ spring:
   datasource:
     driverClassName: com.mysql.jdbc.Driver
     url: jdbc:mysql://115.28.36.79:3306/aixuManager?characterEncoding=utf-8
-    username: root
-    password: root
+    username: aixuManager
+    password: aixuManager1qaz@WSX
   #数据库连接池配置
     max-active: 200
     max-idle: 100

@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,6 +43,9 @@ public class ManagerController {
 	@RequestMapping(value = "/common/login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestBody Manager manager) {
 		try {
+			if (StringUtils.isBlank(manager.getName()) || StringUtils.isBlank(manager.getPassword())) {
+				return ResponseEntity.error("用户名或密码不能为空", null);
+			}
 			LoginResponse loginResponse = new LoginResponse();
 			manager.setPassword(DigestUtils.md5Hex(manager.getPassword()));
 			Manager managerResult = managerMapper.login(manager);
@@ -52,7 +56,7 @@ public class ManagerController {
 				loginResponse.setToken(uuid);
 				loginResponse.setLoginName(managerResult.getName());
 			} else {
-				return ResponseEntity.error("登录失败", loginResponse);
+				return ResponseEntity.error("用户名或密码错误", loginResponse);
 			}
 			return ResponseEntity.success(loginResponse);
 		} catch (Exception e) {
@@ -64,6 +68,18 @@ public class ManagerController {
 	@RequestMapping(value = "/createShopper", method = RequestMethod.POST)
 	public ResponseEntity<?> createShopper(@RequestBody Shopper shopper) {
 		try {
+			if (StringUtils.isBlank(shopper.getName())) {
+				return ResponseEntity.error("公司名称不能为空", null);
+			}
+			if (StringUtils.isBlank(shopper.getAddress())) {
+				return ResponseEntity.error("公司地址不能为空", null);
+			}
+			if (StringUtils.isBlank(shopper.getContactName())) {
+				return ResponseEntity.error("联系人名称不能为空", null);
+			}
+			if (StringUtils.isBlank(shopper.getContactWay())) {
+				return ResponseEntity.error("联系方式不能为空", null);
+			}
 			ShopperResponse createShopperResponse = shopperMapper.createShopper(shopper);
 			if (createShopperResponse == null) {
 				return ResponseEntity.error("创建商家失败", createShopperResponse);
@@ -78,10 +94,13 @@ public class ManagerController {
 	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
 	public ResponseEntity<?> getAllInfo(HttpServletRequest request) {
 		try {
+			if (request.getParameter("pageIndex") == null || request.getParameter("pageSize") == null) {
+				return ResponseEntity.error("pageIndex 和 pageSize 不能为空", null);
+			}
 			int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
 			int pageSize = Integer.parseInt(request.getParameter("pageSize"));
 			PageRequest pageRequest = new PageRequest();
-			pageRequest.setPageIndex(pageIndex * pageSize);
+			pageRequest.setPageIndex(pageIndex*pageSize);
 			pageRequest.setPageSize(pageSize);
 			AllShopperResponse response = new AllShopperResponse();
 			response.setShopperInfos(shopperMapper.getAllInfo(pageRequest));

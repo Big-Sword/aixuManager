@@ -1,15 +1,22 @@
 package com.bao.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.UUID;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bao.controller.msg.AllProductResponse;
 import com.bao.controller.msg.PageRequest;
@@ -31,6 +38,9 @@ public class ProductController {
 	@RequestMapping(value = "/all", method = RequestMethod.GET)
 	public ResponseEntity<?> getInfo(HttpServletRequest request) {
 		try {
+			if (request.getParameter("pageIndex") == null || request.getParameter("pageSize") == null) {
+				return ResponseEntity.error("pageIndex 和 pageSize 不能为空", null);
+			}
 			int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
 			int pageSize = Integer.parseInt(request.getParameter("pageSize"));
 			PageRequest pageRequest = new PageRequest();
@@ -47,8 +57,29 @@ public class ProductController {
 	}
 
 	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
-	public ResponseEntity<?> saveOrUpdate(@RequestBody Product product) {
+	public ResponseEntity<?> saveOrUpdate(Product product, @RequestParam("picUrl") MultipartFile file) {
 		try {
+
+			if (product.getPrice() < 0) {
+				return ResponseEntity.error("产品价格未传或小于0", null);
+			}
+			if (StringUtils.isBlank(product.getName())) {
+				return ResponseEntity.error("产品名称不能为空", null);
+			}
+			if (product.getStock() < 0) {
+				return ResponseEntity.error("库存不能小于0", null);
+			}
+			if (!file.isEmpty()) {
+				byte[] bytes = file.getBytes();
+				File imageFile = new File("/data/images/" + UUID.randomUUID().toString());
+				imageFile.createNewFile();
+				BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(imageFile));
+				outputStream.write(bytes);
+				outputStream.close();
+				product.setPicUrl(imageFile.getPath());
+			} else {
+				return ResponseEntity.error("文件未上传", null);
+			}
 			return ResponseEntity.success(mapper.saveOrUpdate(product));
 		} catch (Exception e) {
 			logger.error("error to saveOrUpdate product", e);
