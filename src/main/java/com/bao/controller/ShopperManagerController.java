@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -75,6 +76,8 @@ public class ShopperManagerController {
 			String id = String.valueOf(request.getAttribute("loginId"));
 			String token = String.valueOf(request.getAttribute("token"));
 			shopper.setId(Long.parseLong(id));
+			shopper.setLoginPassword(DigestUtils.md5Hex(shopper.getLoginPassword()));
+			shopperMapper.updatePassword(shopper);
 			stringRedisTemplate.delete("USER_TOKEN_" + token);
 			return ResponseEntity.success(true);
 		} catch (Exception e) {

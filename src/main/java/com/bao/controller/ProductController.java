@@ -34,22 +34,15 @@ import com.bao.model.Product;
 @RestController
 @RequestMapping(value = "/product")
 public class ProductController {
-  private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
+	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
-  @Autowired
-  private ProductMapper mapper;
+	@Autowired
+	private ProductMapper mapper;
 
-
-	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
-	public ResponseEntity<?> saveOrUpdate(Product product, @RequestParam("picUrl") MultipartFile file) {
+	// 未测
+	@RequestMapping(value = "/upload", method = RequestMethod.POST)
+	public ResponseEntity<?> upload(Product product, @RequestParam("picUrl") MultipartFile file) {
 		try {
-
-			if (StringUtils.isBlank(product.getName())) {
-				return ResponseEntity.error("产品名称不能为空", null);
-			}
-			if (product.getStock() < 0) {
-				return ResponseEntity.error("库存不能小于0", null);
-			}
 			if (!file.isEmpty()) {
 				byte[] bytes = file.getBytes();
 				File imageFile = new File("/data/images/" + UUID.randomUUID().toString());
@@ -68,66 +61,74 @@ public class ProductController {
 		}
 	}
 
-  @RequestMapping(value = "/all", method = RequestMethod.POST)
-  public DataTableRespInfo getInfo(@RequestBody String aoData) throws Exception {
-    try {
-      JSONArray jsonArray =
-          new JSONArray(URLDecoder.decode(aoData, "utf8").replaceAll("aoData=", ""));
-      JSONObject jsonObject;
-      DataTableReqInfo dataTableReqInfo = new DataTableReqInfo();
-      for (int i = 0; i < jsonArray.length(); i++) {
-        jsonObject = jsonArray.getJSONObject(i);
-        if ("iDisplayLength".equals(jsonObject.getString("name"))) {
-          dataTableReqInfo.setiDisplayLength(jsonObject.getInt("value"));
-        }
-        if ("iDisplayStart".equals(jsonObject.getString("name"))) {
-          dataTableReqInfo.setiDisplayStart(jsonObject.getInt("value"));
-        }
-        if ("sEcho".equals(jsonObject.getString("name"))) {
-          dataTableReqInfo.setsEcho(jsonObject.getInt("value"));
-        }
-        if ("sSearch".equals(jsonObject.getString("name"))) {
-          dataTableReqInfo.setsSearch(jsonObject.getString("value"));
-        }
-      }
+	@RequestMapping(value = "/all", method = RequestMethod.POST)
+	public DataTableRespInfo getInfo(@RequestBody String aoData) throws Exception {
+		try {
+			JSONArray jsonArray = new JSONArray(URLDecoder.decode(aoData, "utf8").replaceAll("aoData=", ""));
+			JSONObject jsonObject;
+			DataTableReqInfo dataTableReqInfo = new DataTableReqInfo();
+			for (int i = 0; i < jsonArray.length(); i++) {
+				jsonObject = jsonArray.getJSONObject(i);
+				if ("iDisplayLength".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setiDisplayLength(jsonObject.getInt("value"));
+				}
+				if ("iDisplayStart".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setiDisplayStart(jsonObject.getInt("value"));
+				}
+				if ("sEcho".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setsEcho(jsonObject.getInt("value"));
+				}
+				if ("sSearch".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setsSearch(jsonObject.getString("value"));
+				}
+			}
+			List<Map<String, Object>> resultList = mapper.selectAll(dataTableReqInfo);
+			DataTableRespInfo dataTableRespInfo = new DataTableRespInfo();
+			dataTableRespInfo.setAaData(resultList);
+			int count = mapper.countAllProducts(dataTableReqInfo);
+			dataTableRespInfo.setiTotalDisplayRecords(count);
+			dataTableRespInfo.setiTotalRecords(count);
+			dataTableRespInfo.setsEcho(dataTableReqInfo.getsEcho());
+			return dataTableRespInfo;
+		} catch (Exception e) {
+			logger.error("error to get all info", e);
+			throw e;
+		}
+	}
 
-      List<Map<String, Object>> resultList = mapper.selectAll(dataTableReqInfo);
-      DataTableRespInfo dataTableRespInfo = new DataTableRespInfo();
-      dataTableRespInfo.setAaData(resultList);
-      int count = mapper.countAllProducts(dataTableReqInfo);
-      dataTableRespInfo.setiTotalDisplayRecords(count);
-      dataTableRespInfo.setiTotalRecords(count);
-      dataTableRespInfo.setsEcho(dataTableReqInfo.getsEcho());
-      return dataTableRespInfo;
-    } catch (Exception e) {
-      logger.error("error to get all info", e);
-      throw e;
-    }
-  }
+	@RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
+	public ResponseEntity<?> saveOrUpdate(@RequestBody Product product) {
 
-  @RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
-  public ResponseEntity<?> saveOrUpdate(@RequestBody Product product) {
-    try {
-      return ResponseEntity.success(mapper.saveOrUpdate(product));
-    } catch (Exception e) {
-      logger.error("error to saveOrUpdate product", e);
-      return ResponseEntity.error("保存或更新失败", e);
-    }
-  }
+		try {
+			if (product.getPrice() == null || product.getPrice().doubleValue() < 0) {
+				return ResponseEntity.error("价格不能为空或者不能小于0", null);
+			}
+			if (StringUtils.isBlank(product.getName())) {
+				return ResponseEntity.error("产品名称不能为空", null);
+			}
+			if (product.getStock() < 0) {
+				return ResponseEntity.error("库存不能小于0", null);
+			}
+			return ResponseEntity.success(mapper.saveOrUpdate(product));
+		} catch (Exception e) {
+			logger.error("error to saveOrUpdate product", e);
+			return ResponseEntity.error("保存或更新失败", e);
+		}
+	}
 
-  @RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
-    try {
-      return ResponseEntity.success(mapper.deleteById(Long.parseLong(id)));
-    } catch (Exception e) {
-      logger.error("error to delete product", e);
-      return ResponseEntity.error("删除产品失败", e);
-    }
-  }
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> deleteProduct(@PathVariable("id") String id) {
+		try {
+			return ResponseEntity.success(mapper.deleteById(Long.parseLong(id)));
+		} catch (Exception e) {
+			logger.error("error to delete product", e);
+			return ResponseEntity.error("删除产品失败", e);
+		}
+	}
 
-  @RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
-  public ResponseEntity<?> getInfoById(@PathVariable("id") String id) {
-    return ResponseEntity.success(mapper.selectById(Long.parseLong(id)));
-  }
+	@RequestMapping(value = "/get/{id}", method = RequestMethod.GET)
+	public ResponseEntity<?> getInfoById(@PathVariable("id") String id) {
+		return ResponseEntity.success(mapper.selectById(Long.parseLong(id)));
+	}
 
 }

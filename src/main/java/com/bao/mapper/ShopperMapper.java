@@ -40,7 +40,7 @@ public class ShopperMapper {
 			}
 		}
 		shopper.setLoginName(contactWay);
-		shopper.setLoginPassword(DigestUtils.md2Hex(password));
+		shopper.setLoginPassword(DigestUtils.md5Hex(password));
 		if (this.sqlSessionTemplate.insert("createShopper", shopper) > 0) {
 			response.setUserName(shopper.getLoginName());
 			response.setPassword(password);
@@ -54,7 +54,7 @@ public class ShopperMapper {
 	}
 
 	public int countAllShopper(DataTableReqInfo dataTableReqInfo) {
-		return this.sqlSessionTemplate.selectOne("countTotalShopper",dataTableReqInfo);
+		return this.sqlSessionTemplate.selectOne("countTotalShopper", dataTableReqInfo);
 	}
 
 	public Shopper loginShopper(Shopper shopper) throws Exception {
@@ -63,12 +63,20 @@ public class ShopperMapper {
 	}
 
 	public int updatePassword(Shopper shopper) throws Exception {
-		return this.sqlSessionTemplate.update("updateShopperPassword", shopper);
+		return this.sqlSessionTemplate.update("updateShopperPassword", shopper) ;
 	}
 
 	public Shopper selectByPrimaryKey(long userId) {
-		
-		return this.sqlSessionTemplate.selectOne("selectByPrimaryKey",userId);
+
+		return this.sqlSessionTemplate.selectOne("selectByPrimaryKey", userId);
+	}
+
+	public boolean deleteById(long id) throws Exception {
+		return this.sqlSessionTemplate.update("com.bao.model.Shopper.deleteById", id) == 0 ? false : true;
+	}
+
+	public boolean updateShopper(Shopper shopper) throws Exception {
+		return this.sqlSessionTemplate.update("updateShopper", shopper) == 0 ? false : true;
 	}
 
 }

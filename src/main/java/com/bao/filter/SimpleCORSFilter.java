@@ -80,13 +80,13 @@ public class SimpleCORSFilter implements Filter {
 		logger.info("token :{}", token);
 		logger.info("uri:{}", uri);
 		if (uri.indexOf("/common") < 0) {//
-			if (StringUtils.isNotBlank((token))) {
+			if (StringUtils.isBlank((token))) {
 				response.setStatus(401);
 				return;
 			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
 				String id = stringRedisTemplate.opsForValue().get("USER_TOKEN_" + token);
 				logger.info("loginId:{}", id);
-				if (StringUtils.isNotBlank(id)) {
+				if (StringUtils.isBlank(id)) {
 					response.setStatus(402);
 					return;
 				}

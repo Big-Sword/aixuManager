@@ -19,8 +19,6 @@ public class Shopper {
 
 	private String loginName;
 
-	private int loginTimes;
-
 	private String loginPassword;
 
 	private int isDelete;
@@ -105,14 +103,6 @@ public class Shopper {
 
 	public void setUpdatedAt(Timestamp updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	public int getLoginTimes() {
-		return loginTimes;
-	}
-
-	public void setLoginTimes(int loginTimes) {
-		this.loginTimes = loginTimes;
 	}
 
 }

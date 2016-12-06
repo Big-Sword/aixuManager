@@ -12,7 +12,6 @@
 		<result column="contact_way" property="contactWay" />
 		<result column="login_name" property="loginName" />
 		<result column="login_password" property="loginPassword" />
-		<result column="login_times" property="loginTimes" />
 		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
 		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
 		<result column="is_delete" property="isDelete" />
@@ -25,7 +24,6 @@
 		,contact_way
 		,login_name
 		,login_password
-		,login_times
 		,created_at
 		,updated_at
 		,is_delete
@@ -38,16 +36,38 @@
 		)
 		values(null,#{name},#{address},#{contactName},#{contactWay},#{loginName},#{loginPassword},null,null,0)
 	</insert>
-	<select id="selectByName" resultType="java.lang.String"
+	<select id="selectByContactWay" resultType="java.lang.String"
 		parameterType="java.lang.String">
 		select
-		max(contact_way)
+		max(login_name)
 		from shopper
 		where
-		contact_way
+		login_name
 		LIKE
-		concat(#{contactWay},'_%') for update
+		concat(#{contactWay},'%') for update
 	</select>
+
+	<update id="updateShopper" parameterType="com.bao.model.Shopper">
+
+		update shopper
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="address !=null and address !=''">
+				address = #{address},
+			</if>
+			<if test="contactName !=null and contactName !=''">
+				contact_name = #{contactName},
+			</if>
+			<if test="contactWay != null and contactWay !=''">
+				contact_way = #{contactWay},
+			</if>
+		</set>
+
+		where id = #{id}
+
+	</update>
 
 	<select id="selectAllShopper" resultType="java.util.Map"
 		parameterType="com.bao.controller.msg.DataTableReqInfo">
@@ -65,7 +85,7 @@
 		parameterType="com.bao.model.Shopper">
 		select * from shopper where login_name =
 		#{loginName} and
-		login_password = #{loginPassword}
+		login_password = #{loginPassword} and is_delete = 0
 	</select>
 
 	<update id="updateShopperPassword" parameterType="com.bao.model.Shopper">
@@ -88,4 +108,13 @@
 		from shopper
 		where id = #{id} and is_delete = 0
 	</select>
+
+	<update id="deleteById" parameterType="java.lang.Long">
+		update shopper set
+		is_delete = 1 where id =#{id}
+	</update>
+
+
+
+
 </mapper>

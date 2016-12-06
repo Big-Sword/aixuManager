@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -113,5 +114,25 @@ public class ManagerController {
 			throw e;
 		}
 	}
+	@RequestMapping(value = "/updateShopper", method = RequestMethod.POST)
+	public ResponseEntity<?> updateShopper(@RequestBody Shopper shopper) {
+		try {
+			return ResponseEntity.success(shopperMapper.updateShopper(shopper));
+		} catch (Exception e) {
+			logger.error("error to update shopper", e);
+			return ResponseEntity.error("修改商家失败", e);
+		}
+	}
+
+	@RequestMapping(value = "/delete/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> deleteShopper(@PathVariable("id") String id) {
+		try {
+			return ResponseEntity.success(shopperMapper.deleteById(Long.parseLong(id)));
+		} catch (Exception e) {
+			logger.error("error to delete product", e);
+			return ResponseEntity.error("删除商家失败", e);
+		}
+	}
+
 
 }

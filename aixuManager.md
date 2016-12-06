@@ -258,9 +258,85 @@ post
 
 ```
 
+##1.8（商家登录）
+##http://localhost:8080/shopper/common/login
+
+x-token
+
+  | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| loginName            | 登录名         | string       |                                          | Y    |
+| loginPassword          |    密码    | string      |                                          | Y    |
+
+
+``` 
+post
+``` 
+``` 
+
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "token": "5de1233f-a6d5-4517-8baf-cf4a783f39eb",
+    "loginName": "155555555_1",
+    "isFirstLogin": true
+  }
+}
+ 
+``` 
+
+
+##1.9(更改密码)商家自己修改
+## http://localhost:8080/shopper/updatePassword
+x-token
   
-  
-  
-  
-  
+    | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+ | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| loginName            | 新密码         | string       |                                          | Y    |
+
+``` 
+post
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+
+```  
+
+
+##2.0(修改商家信息)
+##http://localhost:8080/manager/updateShopper
+
+   | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| name            | 公司名称         | int       |                                          | N|
+| address          |    公司地址    | int      |                                          | N    |
+| contactName        | 联系人名称      | String         |                                          | N
+| contactWay        | 联系方式      | String         |                                          | N
+                      
+``` 
+post
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+
+```  
+
+ 
+
+##2.0删除商家
+## http://localhost:8080/manager/delete/{id}
+
+x-token
+
+
   
