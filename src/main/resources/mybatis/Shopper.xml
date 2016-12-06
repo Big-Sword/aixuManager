@@ -48,15 +48,24 @@
 		LIKE
 		concat(#{loginName},'_%')
 	</select>
-	<select id="selectAllShopper" resultMap="BaseResultMap" parameterType="com.bao.controller.msg.PageRequest">
+	<select id="selectAllShopper" resultType="java.util.Map"
+		parameterType="com.bao.controller.msg.DataTableReqInfo">
 		select
 		<include refid="Base_Column_List" />
 		from shopper
-		where is_delete = 0 limit #{pageIndex},#{pageSize}
+		where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
+		order by updated_at desc limit #{iDisplayStart},#{iDisplayLength}
 	</select>
-	
-	<select id="countTotalShopper" resultType="java.lang.Long">
-	 select count(1) from shopper where is_delete = 0
+
+	<select id="countTotalShopper" resultType="java.lang.Integer">
+		select count(1) from
+		shopper where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
 	</select>
 
 </mapper>
