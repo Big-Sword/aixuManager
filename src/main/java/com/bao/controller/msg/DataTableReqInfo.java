@@ -11,7 +11,6 @@ public class DataTableReqInfo {
   private int iDisplayLength;// 每页显示的数量
   private int sEcho; // DataTable请求服务器端次数
   private String sSearch;// 前台search条件
-  private String userName;
 
   public int getiDisplayStart() {
     return iDisplayStart;
@@ -48,14 +47,6 @@ public class DataTableReqInfo {
 
   public String getsSearch() {
     return sSearch;
-  }
-
-  public String getUserName() {
-    return userName;
-  }
-
-  public void setUserName(String userName) {
-    this.userName = userName;
   }
 
   public void setsSearch(String sSearch) {
