@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2015. 上海趣医网络科技有限公司 版权所有
- * Shanghai QuYi Network Technology Co., Ltd. All Rights Reserved.
+ * Copyright (c) 2015. 上海趣医网络科技有限公司 版权所有 Shanghai QuYi Network Technology Co., Ltd. All Rights
+ * Reserved.
  *
  * This is NOT a freeware,use is subject to license terms.
  */
@@ -66,32 +66,31 @@ public class SimpleCORSFilter implements Filter {
 		final HttpServletResponse response = (HttpServletResponse) res;
 		final HttpServletRequest request = (HttpServletRequest) req;
 
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers",
+				"x-requested-with,accept,Content-Type,authorization,x-token");
 		if (request.getMethod().equalsIgnoreCase("options")) {
 			response.setStatus(200);
 			return;
 		}
-
-		response.setHeader("Access-Control-Allow-Origin", "*");
-		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-		response.setHeader("Access-Control-Max-Age", "3600");
-		response.setHeader("Access-Control-Allow-Headers", "x-requested-with,accept,Content-Type,authorization");
 		String uri = request.getRequestURI();
 		String token = request.getHeader("x-token");
 		logger.info("token :{}", token);
 		logger.info("uri:{}", uri);
 		if (uri.indexOf("/common") < 0) {//
-			if (StringUtils.isBlank(token)) {
+			if (StringUtils.isNotBlank((token))) {
 				response.setStatus(401);
 				return;
 			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
 				String id = stringRedisTemplate.opsForValue().get("USER_TOKEN_" + token);
 				logger.info("loginId:{}", id);
-				if (StringUtils.isBlank(id)) {
+				if (StringUtils.isNotBlank(id)) {
 					response.setStatus(402);
 					return;
 				}
 				request.setAttribute("loginId", id);
-				request.setAttribute("token", token);
 			} else {
 				request.setAttribute("loginId", "testId");
 			}

@@ -34,7 +34,7 @@
 		,is_delete
 	</sql>
 
-	
+
 
 	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
 		select
@@ -84,15 +84,25 @@
 		is_delete = 1 where id = #{id}
 	</update>
 
-	<select id="selectAll" resultMap="BaseResultMap" parameterType="com.bao.controller.msg.PageRequest">
+
+	<select id="selectAll" resultType="java.util.Map"
+		parameterType="com.bao.controller.msg.DataTableReqInfo">
 		select
 		<include refid="Base_Column_List" />
 		from product
-		where is_delete = 0 limit #{pageIndex},#{pageSize}
+		where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
+		order by updated_at desc limit #{iDisplayStart},#{iDisplayLength}
 	</select>
 
-	<select id="countTotalProduct" resultType="java.lang.Long">
-		select count(1) from product where is_delete = 0
+	<select id="countTotalProduct" resultType="java.lang.Integer">
+		select count(1) from
+		product where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
 	</select>
 
 </mapper>

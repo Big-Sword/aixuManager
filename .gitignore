@@ -5,10 +5,7 @@
 
 target/*
 /target/
-<<<<<<< HEAD
-
 *.log
-=======
 *.class
 /*/class/*
 /*/classes/*
@@ -46,16 +43,16 @@ hs_err_pid*
 # eclipse project files
 *.classpath
 *.project
-
 !**/dev/*
 !**/test/*
 !**/share/*
 .idea
 .metadata
->>>>>>> origin/master
-
 *.log
-
-*.log
-
 e:/logs/ms-duminjun.log
+*/*/*/application.yml
+src/main/resources/application.yml
+.idea/sonarIssues.xml
+.idea/workspace.xml
+ms-duminjun.iml
+src/main/resources/application.yml

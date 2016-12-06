@@ -1,6 +1,7 @@
 package com.bao.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -8,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bao.controller.msg.PageRequest;
+import com.bao.controller.msg.DataTableReqInfo;
 import com.bao.controller.msg.ShopperResponse;
 import com.bao.model.Shopper;
 import com.bao.utils.CommonUtils;
@@ -48,15 +49,14 @@ public class ShopperMapper {
 		return null;
 	}
 
-	public List<Shopper> getAllInfo(PageRequest pageRequest) {
-		return this.sqlSessionTemplate.selectList("selectAllShopper", pageRequest);
+	public List<Map<String, Object>> getAllInfo(DataTableReqInfo dataTableReqInfo) {
+		return this.sqlSessionTemplate.selectList("selectAllShopper", dataTableReqInfo);
 	}
 
-	public long countAllShopper() {
-		return this.sqlSessionTemplate.selectOne("countTotalShopper");
+	public int countAllShopper(DataTableReqInfo dataTableReqInfo) {
+		return this.sqlSessionTemplate.selectOne("countTotalShopper",dataTableReqInfo);
 	}
 
-	@Transactional
 	public Shopper loginShopper(Shopper shopper) throws Exception {
 
 		return this.sqlSessionTemplate.selectOne("loginShopper", shopper);
@@ -64,6 +64,11 @@ public class ShopperMapper {
 
 	public int updatePassword(Shopper shopper) throws Exception {
 		return this.sqlSessionTemplate.update("updateShopperPassword", shopper);
+	}
+
+	public Shopper selectByPrimaryKey(long userId) {
+		
+		return this.sqlSessionTemplate.selectOne("selectByPrimaryKey",userId);
 	}
 
 }

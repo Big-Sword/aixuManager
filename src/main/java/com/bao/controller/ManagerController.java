@@ -1,12 +1,14 @@
 package com.bao.controller;
 
+import java.net.URLDecoder;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bao.controller.msg.AllShopperResponse;
+import com.bao.controller.msg.DataTableReqInfo;
+import com.bao.controller.msg.DataTableRespInfo;
 import com.bao.controller.msg.LoginResponse;
-import com.bao.controller.msg.PageRequest;
 import com.bao.controller.msg.ShopperResponse;
 import com.bao.framework.ResponseEntity;
 import com.bao.mapper.ManagerMapper;
@@ -43,9 +45,6 @@ public class ManagerController {
 	@RequestMapping(value = "/common/login", method = RequestMethod.POST)
 	public ResponseEntity<?> login(@RequestBody Manager manager) {
 		try {
-			if (StringUtils.isBlank(manager.getName()) || StringUtils.isBlank(manager.getPassword())) {
-				return ResponseEntity.error("用户名或密码不能为空", null);
-			}
 			LoginResponse loginResponse = new LoginResponse();
 			manager.setPassword(DigestUtils.md5Hex(manager.getPassword()));
 			Manager managerResult = managerMapper.login(manager);
@@ -56,7 +55,7 @@ public class ManagerController {
 				loginResponse.setToken(uuid);
 				loginResponse.setLoginName(managerResult.getName());
 			} else {
-				return ResponseEntity.error("用户名或密码错误", loginResponse);
+				return ResponseEntity.error("登录失败", loginResponse);
 			}
 			return ResponseEntity.success(loginResponse);
 		} catch (Exception e) {
@@ -68,18 +67,6 @@ public class ManagerController {
 	@RequestMapping(value = "/createShopper", method = RequestMethod.POST)
 	public ResponseEntity<?> createShopper(@RequestBody Shopper shopper) {
 		try {
-			if (StringUtils.isBlank(shopper.getName())) {
-				return ResponseEntity.error("公司名称不能为空", null);
-			}
-			if (StringUtils.isBlank(shopper.getAddress())) {
-				return ResponseEntity.error("公司地址不能为空", null);
-			}
-			if (StringUtils.isBlank(shopper.getContactName())) {
-				return ResponseEntity.error("联系人名称不能为空", null);
-			}
-			if (StringUtils.isBlank(shopper.getContactWay())) {
-				return ResponseEntity.error("联系方式不能为空", null);
-			}
 			ShopperResponse createShopperResponse = shopperMapper.createShopper(shopper);
 			if (createShopperResponse == null) {
 				return ResponseEntity.error("创建商家失败", createShopperResponse);
@@ -91,24 +78,39 @@ public class ManagerController {
 		}
 	}
 
-	@RequestMapping(value = "/queryAll", method = RequestMethod.GET)
-	public ResponseEntity<?> getAllInfo(HttpServletRequest request) {
+	@RequestMapping(value = "/queryAll", method = RequestMethod.POST)
+	public DataTableRespInfo getAllInfo(@RequestBody String aoData) throws Exception {
 		try {
-			if (request.getParameter("pageIndex") == null || request.getParameter("pageSize") == null) {
-				return ResponseEntity.error("pageIndex 和 pageSize 不能为空", null);
+			JSONArray jsonArray = new JSONArray(URLDecoder.decode(aoData, "utf8").replaceAll("aoData=", ""));
+			JSONObject jsonObject;
+			DataTableReqInfo dataTableReqInfo = new DataTableReqInfo();
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				jsonObject = jsonArray.getJSONObject(i);
+				if ("iDisplayLength".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setiDisplayLength(jsonObject.getInt("value"));
+				}
+				if ("iDisplayStart".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setiDisplayStart(jsonObject.getInt("value"));
+				}
+				if ("sEcho".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setsEcho(jsonObject.getInt("value"));
+				}
+				if ("sSearch".equals(jsonObject.getString("name"))) {
+					dataTableReqInfo.setsSearch(jsonObject.getString("value"));
+				}
 			}
-			int pageIndex = Integer.parseInt(request.getParameter("pageIndex"));
-			int pageSize = Integer.parseInt(request.getParameter("pageSize"));
-			PageRequest pageRequest = new PageRequest();
-			pageRequest.setPageIndex(pageIndex*pageSize);
-			pageRequest.setPageSize(pageSize);
-			AllShopperResponse response = new AllShopperResponse();
-			response.setShopperInfos(shopperMapper.getAllInfo(pageRequest));
-			response.setTotal(shopperMapper.countAllShopper());
-			return ResponseEntity.success(response);
+			List<Map<String, Object>> resultList = shopperMapper.getAllInfo(dataTableReqInfo);
+			DataTableRespInfo dataTableRespInfo = new DataTableRespInfo();
+			dataTableRespInfo.setAaData(resultList);
+			int count = shopperMapper.countAllShopper(dataTableReqInfo);
+			dataTableRespInfo.setiTotalDisplayRecords(count);
+			dataTableRespInfo.setiTotalRecords(count);
+			dataTableRespInfo.setsEcho(dataTableReqInfo.getsEcho());
+			return dataTableRespInfo;
 		} catch (Exception e) {
 			logger.error("error to get all info", e);
-			return ResponseEntity.error("查询失败", e);
+			throw e;
 		}
 	}
 

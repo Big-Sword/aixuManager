@@ -1,5 +1,6 @@
 package com.bao.model;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 import lombok.Data;
@@ -13,7 +14,7 @@ public class Product {
 	private String name = "";// 名称
 	private String picUrl = "";// 图片
 	private String content = "";// 内容
-	private Double price;// 价格
+	private BigDecimal price;// 价格
 	private int stock;// 库存
 	private String modelType = "";// 型号
 	private String colourType = "";// 色号
@@ -54,11 +55,11 @@ public class Product {
 		this.content = content;
 	}
 
-	public Double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

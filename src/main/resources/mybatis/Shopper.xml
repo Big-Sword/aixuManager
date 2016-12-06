@@ -12,7 +12,7 @@
 		<result column="contact_way" property="contactWay" />
 		<result column="login_name" property="loginName" />
 		<result column="login_password" property="loginPassword" />
-	    <result column="login_times" property="loginTimes" />
+		<result column="login_times" property="loginTimes" />
 		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
 		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
 		<result column="is_delete" property="isDelete" />
@@ -48,18 +48,18 @@
 		LIKE
 		concat(#{contactWay},'_%') for update
 	</select>
-	<select id="selectAllShopper" resultMap="BaseResultMap"
-		parameterType="com.bao.controller.msg.PageRequest">
-		select
+
+	<select id="selectAllShopper" resultType="java.util.Map"
+		parameterType="com.bao.controller.msg.DataTableReqInfo">
 		<include refid="Base_Column_List" />
 		from shopper
-		where is_delete = 0 limit #{pageIndex},#{pageSize}
+		where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
+		order by updated_at desc limit #{iDisplayStart},#{iDisplayLength}
 	</select>
 
-	<select id="countTotalShopper" resultType="java.lang.Long">
-		select count(1) from
-		shopper where is_delete = 0
-	</select>
 
 	<select id="loginShopper" resultMap="BaseResultMap"
 		parameterType="com.bao.model.Shopper">
@@ -67,11 +67,25 @@
 		#{loginName} and
 		login_password = #{loginPassword}
 	</select>
-	
+
 	<update id="updateShopperPassword" parameterType="com.bao.model.Shopper">
 		update shopper
 		set login_password = #{loginPassword} where id = #{id}
 	</update>
 
+	<select id="countTotalShopper" resultType="java.lang.Integer">
+		select count(1) from
+		shopper where is_delete = 0
+		<if test="sSearch!=''">
+			and name like CONCAT('%','${sSearch}','%' )
+		</if>
+	</select>
 
+	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
+		parameterType="java.lang.Long">
+		select
+		<include refid="Base_Column_List" />
+		from shopper
+		where id = #{id} and is_delete = 0
+	</select>
 </mapper>
