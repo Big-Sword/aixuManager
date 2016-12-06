@@ -52,4 +52,7 @@ hs_err_pid*
 e:/logs/ms-duminjun.log
 */*/*/application.yml
 src/main/resources/application.yml
-
+.idea/sonarIssues.xml
+.idea/workspace.xml
+ms-duminjun.iml
+src/main/resources/application.yml
