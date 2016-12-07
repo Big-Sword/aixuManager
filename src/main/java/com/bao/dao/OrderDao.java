@@ -22,6 +22,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by hanruofei on 16/12/6.
@@ -52,6 +53,8 @@ public class OrderDao {
 			throw new SystemException(500, "商品不能为空");
 		if (request.getDeliveryTime() == 0 || request.getWeddingTime() == 0)
 			throw new SystemException(500, "时间不能为空");
+		List<Long> productIds = orderDetailItems.stream().map(n -> n.getProductId()).distinct().collect(Collectors.toList());
+		if (productIds.size() != orderDetailItems.size()) throw new SystemException(500, "请合并相同商品下单");
 
 		Orders orders = new Orders();
 		orders.setOrderNum(OrderUtils.generatorOrderNum());
@@ -81,6 +84,13 @@ public class OrderDao {
 			orderDetail.setOrderId(orders.getId());
 			orderDetail.setProductId(product.getId());
 			orderDetail.setProductCount(orderDetailItem.getProductNum());
+			orderDetail.setName(product.getName());
+			orderDetail.setPicUrl(product.getPicUrl());
+			orderDetail.setContent(product.getContent());
+			orderDetail.setPrice(product.getPrice());
+			orderDetail.setModelType(product.getModelType());
+			orderDetail.setColourType(product.getColourType());
+
 			orderDetails.add(orderDetail);
 
 			orderPrice = orderPrice

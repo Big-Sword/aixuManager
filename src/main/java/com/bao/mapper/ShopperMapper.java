@@ -54,21 +54,21 @@ public class ShopperMapper {
 	}
 
 	public int countAllShopper(DataTableReqInfo dataTableReqInfo) {
-		return this.sqlSessionTemplate.selectOne("countTotalShopper", dataTableReqInfo);
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.countTotalShopper", dataTableReqInfo);
 	}
 
 	public Shopper loginShopper(Shopper shopper) throws Exception {
 
-		return this.sqlSessionTemplate.selectOne("loginShopper", shopper);
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.loginShopper", shopper);
 	}
 
 	public int updatePassword(Shopper shopper) throws Exception {
-		return this.sqlSessionTemplate.update("updateShopperPassword", shopper) ;
+		return this.sqlSessionTemplate.update("com.bao.model.Shopper.updateShopperPassword", shopper) ;
 	}
 
 	public Shopper selectByPrimaryKey(long userId) {
 
-		return this.sqlSessionTemplate.selectOne("selectByPrimaryKey", userId);
+		return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.selectByPrimaryKey", userId);
 	}
 
 	public boolean deleteById(long id) throws Exception {
@@ -76,7 +76,7 @@ public class ShopperMapper {
 	}
 
 	public boolean updateShopper(Shopper shopper) throws Exception {
-		return this.sqlSessionTemplate.update("updateShopper", shopper) == 0 ? false : true;
+		return this.sqlSessionTemplate.update("com.bao.model.Shopper.updateShopper", shopper) == 0 ? false : true;
 	}
 
 }

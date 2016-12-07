@@ -42,4 +42,9 @@ public class OrderDetailMapper {
     public int updateByPrimaryKey(OrderDetail record){
         return this.sqlSessionTemplate.update("com.bao.mapper.OrderDetailMapper.updateByPrimaryKey",record);
     }
+
+    public List<OrderDetail> selectBySelective(OrderDetail record){
+        return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderDetailMapper.selectBySelective",record);
+    }
+
 }

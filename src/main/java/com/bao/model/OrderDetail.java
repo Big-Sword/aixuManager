@@ -15,6 +15,13 @@ public class OrderDetail {
 	private Long productId;//商品id
 	private Integer productCount;//商品数量
 
+	private String name;// 名称
+	private String picUrl;// 图片
+	private String content;// 内容
+	private BigDecimal price;// 价格
+	private String modelType;// 型号
+	private String colourType;// 色号
+
 	private int isDelete;
 	private Timestamp updatedAt;
 
@@ -67,6 +74,54 @@ public class OrderDetail {
 		this.updatedAt = updatedAt;
 	}
 
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public String getModelType() {
+		return modelType;
+	}
+
+	public void setModelType(String modelType) {
+		this.modelType = modelType;
+	}
+
+	public String getColourType() {
+		return colourType;
+	}
+
+	public void setColourType(String colourType) {
+		this.colourType = colourType;
+	}
+
 	@Override
 	public String toString() {
 		return "OrderDetail{" +
@@ -74,6 +129,12 @@ public class OrderDetail {
 				", orderId=" + orderId +
 				", productId=" + productId +
 				", productCount=" + productCount +
+				", name='" + name + '\'' +
+				", picUrl='" + picUrl + '\'' +
+				", content='" + content + '\'' +
+				", price=" + price +
+				", modelType='" + modelType + '\'' +
+				", colourType='" + colourType + '\'' +
 				", isDelete=" + isDelete +
 				", updatedAt=" + updatedAt +
 				'}';

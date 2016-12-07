@@ -185,4 +185,77 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+
+  <select id="selectBySelective" resultType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from orders
+    where is_delete = 0
+    <if test="orders.orderNum != null" >
+      and order_num = #{orders.orderNum}
+    </if>
+    <if test="orders.shopperId != null" >
+      and shopper_id = #{orders.shopperId}
+    </if>
+    <if test="orders.orderPrice != null" >
+      and order_price = #{orders.orderPrice}
+    </if>
+    <if test="orders.customer != null" >
+      and customer = #{orders.customer}
+    </if>
+    <if test="orders.contact != null" >
+      and contact = #{orders.contact}
+    </if>
+    <if test="orders.address != null" >
+      and address = #{orders.address}
+    </if>
+    <if test="orders.status != null" >
+      and status = #{orders.status}
+    </if>
+    <if test="orders.deliveryTime != null" >
+      and delivery_time = #{orders.deliveryTime}
+    </if>
+    <if test="orders.weddingTime != null" >
+      and wedding_time = #{orders.weddingTime}
+    </if>
+    <if test="orders.orderTime != null" >
+      and order_time = #{orders.orderTime}
+    </if>
+    order by updated_at desc limit #{dataTableReqInfo.iDisplayStart},#{dataTableReqInfo.iDisplayLength}
+  </select>
+
+  <select id="countBySelective" resultType="java.lang.Integer">
+    select count(1) from
+    orders where is_delete = 0
+    <if test="orders.orderNum != null" >
+      and order_num = #{orders.orderNum}
+    </if>
+    <if test="orders.shopperId != null" >
+      and shopper_id = #{orders.shopperId}
+    </if>
+    <if test="orders.orderPrice != null" >
+      and order_price = #{orders.orderPrice}
+    </if>
+    <if test="orders.customer != null" >
+      and customer = #{orders.customer}
+    </if>
+    <if test="orders.contact != null" >
+      and contact = #{orders.contact}
+    </if>
+    <if test="orders.address != null" >
+      and address = #{orders.address}
+    </if>
+    <if test="orders.status != null" >
+      and status = #{orders.status}
+    </if>
+    <if test="orders.deliveryTime != null" >
+      and delivery_time = #{orders.deliveryTime}
+    </if>
+    <if test="orders.weddingTime != null" >
+      and wedding_time = #{orders.weddingTime}
+    </if>
+    <if test="orders.orderTime != null" >
+      and order_time = #{orders.orderTime}
+    </if>
+  </select>
 </mapper>
