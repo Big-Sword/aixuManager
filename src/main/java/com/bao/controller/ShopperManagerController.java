@@ -11,12 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bao.constant.ConstantValue;
 import com.bao.controller.msg.LoginResponse;
 import com.bao.framework.ResponseEntity;
 import com.bao.mapper.ShopperMapper;
@@ -51,8 +51,8 @@ public class ShopperManagerController {
 					loginResponse.setFirstLogin(true);
 				}
 				String uuid = UUID.randomUUID().toString();
-				stringRedisTemplate.opsForValue().set("USER_TOKEN_" + uuid, String.valueOf(shopper.getId()), 12,
-						TimeUnit.HOURS);
+				stringRedisTemplate.opsForValue().set(ConstantValue.USER_TOKEN + uuid, String.valueOf(shopper.getId()),
+						12, TimeUnit.HOURS);
 				loginResponse.setToken(uuid);
 				loginResponse.setLoginName(loginName);
 
@@ -78,7 +78,7 @@ public class ShopperManagerController {
 			shopper.setId(Long.parseLong(id));
 			shopper.setLoginPassword(DigestUtils.md5Hex(shopper.getLoginPassword()));
 			shopperMapper.updatePassword(shopper);
-			stringRedisTemplate.delete("USER_TOKEN_" + token);
+			stringRedisTemplate.delete(ConstantValue.USER_TOKEN + token);
 			return ResponseEntity.success(true);
 		} catch (Exception e) {
 			logger.error("error to update password", e);

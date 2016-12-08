@@ -25,6 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import com.bao.constant.ConstantValue;
+
 /**
  * 允许跨域.
  *
@@ -84,18 +86,28 @@ public class SimpleCORSFilter implements Filter {
 				response.setStatus(401);
 				return;
 			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
-				String id = stringRedisTemplate.opsForValue().get("USER_TOKEN_" + token);
-				logger.info("loginId:{}", id);
-				if (StringUtils.isBlank(id)) {
+				String shopperId = stringRedisTemplate.opsForValue().get(ConstantValue.USER_TOKEN + token);
+				String managerId = stringRedisTemplate.opsForValue().get(ConstantValue.MANAGER_TOKEN + token);
+				logger.info("shopperId:{}", shopperId);
+				logger.info("managerId:{}", managerId);
+				if (StringUtils.isBlank(shopperId) && StringUtils.isBlank(managerId)) {
 					response.setStatus(402);
 					return;
 				}
-				request.setAttribute("loginId", id);
+				if (StringUtils.isNotBlank(shopperId)) {
+					request.setAttribute("loginId", shopperId);
+				}
+				if (StringUtils.isNotBlank(managerId)) {
+					request.setAttribute("managerId", managerId);
+				}
 			} else {
 				request.setAttribute("loginId", "testId");
+				request.setAttribute("managerId", "testId");
 			}
 		} else {
 			request.setAttribute("loginId", "commonId");
+			request.setAttribute("managerId", "commonId");
+
 		}
 		filterChain.doFilter(req, res);
 	}

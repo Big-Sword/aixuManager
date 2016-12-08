@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bao.constant.ConstantValue;
 import com.bao.controller.msg.DataTableReqInfo;
 import com.bao.controller.msg.DataTableRespInfo;
 import com.bao.controller.msg.LoginResponse;
@@ -51,8 +52,8 @@ public class ManagerController {
 			Manager managerResult = managerMapper.login(manager);
 			if (managerResult != null) {
 				String uuid = UUID.randomUUID().toString();
-				stringRedisTemplate.opsForValue().set("USER_TOKEN_" + uuid, String.valueOf(managerResult.getId()), 12,
-						TimeUnit.HOURS);
+				stringRedisTemplate.opsForValue().set(ConstantValue.MANAGER_TOKEN + uuid,
+						String.valueOf(managerResult.getId()), 12, TimeUnit.HOURS);
 				loginResponse.setToken(uuid);
 				loginResponse.setLoginName(managerResult.getName());
 			} else {
@@ -114,6 +115,7 @@ public class ManagerController {
 			throw e;
 		}
 	}
+
 	@RequestMapping(value = "/updateShopper", method = RequestMethod.POST)
 	public ResponseEntity<?> updateShopper(@RequestBody Shopper shopper) {
 		try {
@@ -133,6 +135,5 @@ public class ManagerController {
 			return ResponseEntity.error("删除商家失败", e);
 		}
 	}
-
 
 }
