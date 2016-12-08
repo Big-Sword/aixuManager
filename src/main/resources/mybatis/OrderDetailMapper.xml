@@ -6,11 +6,24 @@
     <result column="order_id" jdbcType="BIGINT" property="orderId" />
     <result column="product_id" jdbcType="BIGINT" property="productId" />
     <result column="product_count" jdbcType="INTEGER" property="productCount" />
+    <result column="name" property="name" />
+    <result column="pic_url" property="picUrl" />
+    <result column="content" property="content" />
+    <result column="price" property="price" />
+    <result column="model_type" property="modelType" />
+    <result column="colour_type" property="colourType" />
     <result column="is_delete" jdbcType="TINYINT" property="isDelete" />
     <result column="updated_at" property="updatedAt" />
   </resultMap>
   <sql id="Base_Column_List">
-    id, order_id, product_id, product_count, is_delete, updated_at
+    id, order_id, product_id, product_count
+        ,name
+		,pic_url
+		,content
+		,price
+		,model_type
+		,colour_type
+		,is_delete, updated_at
   </sql>
   <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
     select 
@@ -24,10 +37,23 @@
   </delete>
   <insert id="insert" parameterType="com.bao.model.OrderDetail">
     insert into order_detail (id, order_id, product_id, 
-      product_count, is_delete,
+      product_count
+        ,name
+		,pic_url
+		,content
+		,price
+		,model_type
+		,colour_type, is_delete,
       updated_at)
     values (#{id,jdbcType=BIGINT}, #{orderId,jdbcType=BIGINT}, #{productId,jdbcType=BIGINT}, 
-      #{productCount,jdbcType=INTEGER}, #{isDelete,jdbcType=TINYINT},
+      #{productCount,jdbcType=INTEGER},
+      #{name},
+      #{picUrl},
+      #{content},
+      #{price},
+      #{modelType},
+      #{colourType},
+      #{isDelete,jdbcType=TINYINT},
       #{updatedAt,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.bao.model.OrderDetail">
@@ -44,6 +70,24 @@
       </if>
       <if test="productCount != null">
         product_count,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="picUrl != null">
+        pic_url,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="modelType != null">
+        model_type,
+      </if>
+      <if test="colourType != null">
+        colour_type,
       </if>
       <if test="isDelete != null">
         is_delete,
@@ -65,6 +109,24 @@
       <if test="productCount != null">
         #{productCount,jdbcType=INTEGER},
       </if>
+      <if test="name != null">
+        #{name},
+      </if>
+      <if test="picUrl != null">
+        #{picUrl},
+      </if>
+      <if test="content != null">
+        #{content},
+      </if>
+      <if test="price != null">
+        #{price},
+      </if>
+      <if test="modelType != null">
+        #{modelType},
+      </if>
+      <if test="colourType != null">
+        #{colourType},
+      </if>
       <if test="isDelete != null">
         #{isDelete,jdbcType=TINYINT},
       </if>
@@ -85,6 +147,24 @@
       <if test="productCount != null">
         product_count = #{productCount,jdbcType=INTEGER},
       </if>
+      <if test="name != null">
+        name = #{name},
+      </if>
+      <if test="picUrl != null">
+        pic_url = #{picUrl},
+      </if>
+      <if test="content != null">
+        content = #{content},
+      </if>
+      <if test="price != null">
+        price = #{price},
+      </if>
+      <if test="modelType != null">
+        model_type = #{modelType},
+      </if>
+      <if test="colourType != null">
+        colour_type = #{colourType},
+      </if>
       <if test="isDelete != null">
         is_delete = #{isDelete,jdbcType=TINYINT},
       </if>
@@ -99,6 +179,12 @@
     set order_id = #{orderId,jdbcType=BIGINT},
       product_id = #{productId,jdbcType=BIGINT},
       product_count = #{productCount,jdbcType=INTEGER},
+      name = #{name},
+      pic_url = #{picUrl},
+      content = #{content},
+      price = #{price},
+      model_type = #{modelType},
+      colour_type = #{colourType},
       is_delete = #{isDelete,jdbcType=TINYINT},
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
@@ -106,11 +192,58 @@
 
   <insert id="batchInsert" parameterType="java.util.List">
     insert into
-    order_detail(order_id,product_id,product_count)
+    order_detail(order_id,product_id,product_count,name
+    ,pic_url
+    ,content
+    ,price
+    ,model_type
+    ,colour_type)
     values
     <foreach collection="list" item="item" index="index"
              separator=",">
-      (#{item.orderId},#{item.productId},#{item.productCount})
+      (#{item.orderId},#{item.productId},#{item.productCount},#{item.name}
+      ,#{item.picUrl}
+      ,#{item.content}
+      ,#{item.price}
+      ,#{item.modelType}
+      ,#{item.colourType})
     </foreach>
   </insert>
+
+  <select id="selectBySelective" resultMap="BaseResultMap" parameterType="com.bao.model.OrderDetail">
+    select
+    <include refid="Base_Column_List" />
+    from order_detail
+    where is_delete = 0
+    <if test="id != null">
+      and id = #{id}
+    </if>
+    <if test="orderId != null">
+      and order_id = #{orderId}
+    </if>
+    <if test="productId != null">
+      and product_id = #{productId}
+    </if>
+    <if test="productCount != null">
+      and product_count = #{productCount}
+    </if>
+    <if test="name != null">
+      and name = #{name}
+    </if>
+    <if test="picUrl != null">
+      and pic_url = #{picUrl}
+    </if>
+    <if test="content != null">
+      and content = #{content}
+    </if>
+    <if test="price != null">
+      and price = #{price}
+    </if>
+    <if test="modelType != null">
+      and model_type = #{modelType}
+    </if>
+    <if test="colourType != null">
+      and colour_type = #{colourType}
+    </if>
+  </select>
 </mapper>

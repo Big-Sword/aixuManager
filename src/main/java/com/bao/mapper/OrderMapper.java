@@ -1,11 +1,16 @@
 package com.bao.mapper;
 
 
+import com.bao.controller.msg.DataTableReqInfo;
 import com.bao.model.Orders;
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Slf4j
@@ -35,5 +40,18 @@ public class OrderMapper {
 
     public int updateByPrimaryKey(Orders record){
         return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKey",record);
+    }
+
+    public List<Map<String, Object>> selectBySelective(DataTableReqInfo dataTableReqInfo,Orders orders) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("dataTableReqInfo",dataTableReqInfo);
+        param.put("orders",orders);
+        return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderMapper.selectBySelective", param);
+    }
+    public int countBySelective(DataTableReqInfo dataTableReqInfo,Orders orders) {
+        Map<String,Object> param = new HashMap<>();
+        param.put("dataTableReqInfo",dataTableReqInfo);
+        param.put("orders",orders);
+        return this.sqlSessionTemplate.selectOne("countBySelective", param);
     }
 }
