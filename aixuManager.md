@@ -190,6 +190,7 @@ get
 ##1.5（产品删除）
 ## http://localhost:8080/product/delete/{id}
 x-token
+
 ``` 
 post
 ``` 
@@ -202,22 +203,31 @@ post
 }
 ```
 
-##1.6（产品创建或更新）
+##1.6（产品创建或更新已包括产品图片上传）
 ## http://localhost:8080/product/saveOrUpdate
 x-token
+
 ``` 
 post
 ``` 
+
+
   | 名称                 | 描述           | 类型           | 备注                                       | 必需   
 | ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+
 | name            | 产品名称         | string       |                                          | Y    |
-| picUrl          |    图片   | string      |                                          | Y    |
+
+| picUrl          |    图片   | file      |                                          | Y    |
+
 | content        | 内容      | String         |                                          | Y
+
 | contactWay        | 联系方式      | double         |                                          | Y
+
 | stock        | 库存      | String         |                                          | Y
+
 | modelType        | 型号      | String         |                                          | Y
+
 | colourType        | 色号      | String         |                                          | Y
-| remark        | 描述      | String         |                                          | Y
 
 id: 更新时需要 传递  
      
@@ -232,6 +242,7 @@ id: 更新时需要 传递
 ##1.7（产品信息）
 ## http://localhost:8080/product/get/{id}
 x-token
+
 ``` 
 post
 ``` 
@@ -338,5 +349,16 @@ post
 
 x-token
 
+``` 
+post
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+
+```  
 
   
