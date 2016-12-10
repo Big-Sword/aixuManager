@@ -54,25 +54,28 @@
 	<update id="updateById" parameterType="com.bao.model.Product">
 		update product
 		<set>
-			<if test="name != null">
+			<if test="name != null and name != ''">
 				name = #{name},
 			</if>
-			<if test="picUrl != null">
+			<if test="picUrl != null and picUrl != ''">
 				pic_url = #{picUrl},
 			</if>
-			<if test="content != null">
+			<if test="price >= 0">
+				price = #{price},
+			</if>
+			<if test="content != null and content != ''">
 				content = #{content},
 			</if>
-			<if test="stock != null">
+			<if test="stock >= 0">
 				stock = #{stock},
 			</if>
-			<if test="modelType != null">
+			<if test="modelType != null and modelType != ''">
 				model_type = #{modelType},
 			</if>
-			<if test="colourType != null">
+			<if test="colourType != null and colourType != ''">
 				colour_type = #{colourType},
 			</if>
-			<if test="remark != null">
+			<if test="remark != null and remark != ''">
 				remark = #{remark}
 			</if>
 		</set>
