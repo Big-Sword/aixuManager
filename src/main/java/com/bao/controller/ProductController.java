@@ -35,6 +35,7 @@ import com.bao.model.Product;
 @RestController
 @RequestMapping(value = "/product")
 public class ProductController {
+
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
 	private static final String PHOTO_PATH = "/Users/longie/";
