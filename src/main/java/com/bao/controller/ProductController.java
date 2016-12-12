@@ -54,9 +54,9 @@ public class ProductController {
 				if (!imageFile.getParentFile().exists()) {
 					imageFile.getParentFile().mkdirs();
 				}
-				BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(imageFile));
-				outputStream.write(bytes);
-				outputStream.close();
+				try (BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(imageFile))) {
+					outputStream.write(bytes);
+				}
 				uploadResponse.setPicUrl(uuid);
 			} else {
 				return ResponseEntity.error("产品图片未上传", null);
