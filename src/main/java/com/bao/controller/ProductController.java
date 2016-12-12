@@ -107,7 +107,7 @@ public class ProductController {
 				return ResponseEntity.error("型号不能为空", null);
 			}
 			if (StringUtils.isBlank(colourType)) {
-				return ResponseEntity.error("色号不能小于0", null);
+				return ResponseEntity.error("色号不能为空", null);
 			}
 			Product product = new Product();
 			product.setId(id == null ? 0L : Long.parseLong(id));
