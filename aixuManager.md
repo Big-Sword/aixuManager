@@ -203,7 +203,7 @@ post
 }
 ```
 
-##1.6（产品创建或更新已包括产品图片上传）
+##1.6（产品创建或更新）
 ## http://localhost:8080/product/saveOrUpdate
 x-token
 
@@ -360,5 +360,19 @@ post
 }
 
 ```  
+##2.1（产品图片上传）
+## http://localhost:8080/product/upload
+x-token
 
+``` 
+post
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": {"picUrl":"c3389425-a808-40a2-86b9-5deaaab37f5c"}
+}
+
+```  
   
