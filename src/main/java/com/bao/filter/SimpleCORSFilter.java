@@ -75,6 +75,7 @@ public class SimpleCORSFilter implements Filter {
     }
     String uri = request.getRequestURI();
     String token = request.getHeader("x-token");
+
     if (uri.indexOf("/common") < 0) {//
       if (StringUtils.isBlank((token))) {
         response.setStatus(401);

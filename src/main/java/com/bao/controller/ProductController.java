@@ -62,7 +62,8 @@ public class ProductController {
       if (!file.isEmpty()) {
         byte[] bytes = file.getBytes();
         String uuid = UUID.randomUUID().toString();
-        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1);
+        String suffix =
+            file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
         File imageFile = new File(PHOTO_PATH + uuid + "." + suffix);
         if (!imageFile.getParentFile().exists()) {
@@ -85,7 +86,9 @@ public class ProductController {
     } finally {
       try {
         if (outputStream != null) outputStream.close();
-      } catch (IOException e) {}
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     return result;
   }
