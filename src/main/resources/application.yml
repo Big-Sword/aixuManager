@@ -34,6 +34,9 @@ spring.redis.pool.max-active: 2000
 spring.redis.pool.max-wait: 10000
 spring.redis.pool.max-idle: 500
 spring.redis.timeout: 30000
+multipart.maxFileSize: 10MB
+multipart.maxRequestSize: 20MB
+ #multipart.maxRequestSize=30MB
 
 logging:
   file: e://logs/ms-duminjun.log
