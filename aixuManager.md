@@ -376,4 +376,33 @@ post
 }
 
 ```  
+
+##2.2查询商家信息
+## http://localhost:8080/manager/getShopper/{id}
+
+x-token
+
+``` 
+get
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": {
+    "id": 11,
+    "name": "2222",
+    "address": "上海",
+    "contactName": "eeee",
+    "contactWay": "13344",
+    "loginName": "13344_1",
+    "loginPassword": "c6e503ab098d6842e7c5bade890140b1",
+    "isDelete": 0,
+    "createdAt": 1481009151000,
+    "updatedAt": 1481009151000
+  }
+}
+
+```  
+
   
