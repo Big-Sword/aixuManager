@@ -1,6 +1,8 @@
 package com.bao.controller;
 
 import java.net.URLDecoder;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -122,6 +124,38 @@ public class OrderController {
 
       DataTableReqInfo dataTableReqInfo = reciveAoData(aoData);
       Orders orders = new Orders();
+      orders.setShopperName(request.getParameter("shopper_name"));
+      String status = request.getParameter("status");
+      if (StringUtils.isNoneBlank(status)) {
+        orders.setStatus(Integer.parseInt(status));
+      }
+      orders.setCustomer(request.getParameter("customer"));
+      orders.setContact(request.getParameter("contact"));
+      SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+      String os = request.getParameter("order_timeS");
+      if (StringUtils.isNoneBlank(os)) {
+        orders.setOrderTimeS(new Timestamp(simpleDateFormat.parse(os).getTime()));
+      }
+      String oe = request.getParameter("order_timeE");
+      if (StringUtils.isNoneBlank(oe)) {
+        orders.setOrderTimeE(new Timestamp(simpleDateFormat.parse(oe).getTime()));
+      }
+      String ws = request.getParameter("wedding_timeS");
+      if (StringUtils.isNoneBlank(ws)) {
+        orders.setWeddingTimeS(new Timestamp(simpleDateFormat.parse(ws).getTime()));
+      }
+      String we = request.getParameter("wedding_timeE");
+      if (StringUtils.isNoneBlank(we)) {
+        orders.setWeddingTimeE(new Timestamp(simpleDateFormat.parse(we).getTime()));
+      }
+      String ds = request.getParameter("delivery_timeS");
+      if (StringUtils.isNoneBlank(ds)) {
+        orders.setDeliveryTimeS(new Timestamp(simpleDateFormat.parse(ds).getTime()));
+      }
+      String de = request.getParameter("delivery_timeE");
+      if (StringUtils.isNoneBlank(de)) {
+        orders.setDeliveryTimeE(new Timestamp(simpleDateFormat.parse(de).getTime()));
+      }
 
       List<Map<String, Object>> resultList =
           orderMapper.selectBySelective(dataTableReqInfo, orders);

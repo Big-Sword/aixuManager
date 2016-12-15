@@ -231,33 +231,49 @@
 			and shopper_id = #{orders.shopperId}
 		</if>
 		<if test="orders.shopperName != null">
-			and shopper_name = #{orders.shopperName}
+			and shopper_name like
+			CONCAT('%','${orders.shopperName}','%' )
 		</if>
 		<if test="orders.orderPrice != null">
 			and order_price = #{orders.orderPrice}
 		</if>
 		<if test="orders.customer != null">
-			and customer = #{orders.customer}
+			and customer like
+			CONCAT('%','${orders.customer}','%' )
 		</if>
 		<if test="orders.contact != null">
-			and contact = #{orders.contact}
+			and contact like
+			CONCAT('%','${orders.orders.contact}','%'
+			)
 		</if>
 		<if test="orders.address != null">
 			and address = #{orders.address}
 		</if>
-		<if test="orders.status != null">
+		<if test="orders.status != null and orders.status != -1">
 			and status = #{orders.status}
 		</if>
-		<if test="orders.deliveryTime != null">
-			and delivery_time = #{orders.deliveryTime}
+		<if test="orders.deliveryTimeS != null">
+			and delivery_time &gt;= #{orders.deliveryTimeS}
 		</if>
-		<if test="orders.weddingTime != null">
-			and wedding_time = #{orders.weddingTime}
+		<if test="orders.deliveryTimeE != null">
+			and delivery_time &lt;= #{orders.deliveryTimeE}
 		</if>
-		<if test="orders.orderTime != null">
-			and order_time = #{orders.orderTime}
+		<if test="orders.weddingTimeS != null">
+			and wedding_time &gt;= #{orders.weddingTimeS}
+		</if>
+		<if test="orders.weddingTimeE != null">
+			and wedding_time &lt;= #{orders.weddingTimeE}
+		</if>
+		<if test="orders.orderTimeS != null">
+			and order_time &gt;= #{orders.orderTimeS}
+		</if>
+		<if test="orders.orderTimeE != null">
+			and order_time &lt;= #{orders.orderTimeE}
 		</if>
 
+		<if test="dataTableReqInfo.iSortCol_0==0">
+			order by updated_at desc
+		</if>
 		<if test="dataTableReqInfo.iSortCol_0==2">
 			order by order_time
 		</if>
@@ -271,11 +287,13 @@
 			order by status
 		</if>
 
-		<if test="dataTableReqInfo.sSortDir_0=='asc'">
-			asc
-		</if>
-		<if test="dataTableReqInfo.sSortDir_0=='desc'">
-			desc
+		<if test="dataTableReqInfo.iSortCol_0!=0">
+			<if test="dataTableReqInfo.sSortDir_0=='asc'">
+				asc
+			</if>
+			<if test="dataTableReqInfo.sSortDir_0=='desc'">
+				desc
+			</if>
 		</if>
 
 		limit
