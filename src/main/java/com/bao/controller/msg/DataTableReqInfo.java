@@ -11,6 +11,26 @@ public class DataTableReqInfo {
   private int iDisplayLength;// 每页显示的数量
   private int sEcho; // DataTable请求服务器端次数
   private String sSearch;// 前台search条件
+  private int iSortCol_0;// 前台需要排序的列
+  private String sSortDir_0;// 排序方式
+  
+
+  public int getiSortCol_0() {
+    return iSortCol_0;
+  }
+
+  public void setiSortCol_0(int iSortCol_0) {
+    this.iSortCol_0 = iSortCol_0;
+  }
+
+  public String getsSortDir_0() {
+    return sSortDir_0;
+  }
+  
+
+  public void setsSortDir_0(String sSortDir_0) {
+    this.sSortDir_0 = sSortDir_0;
+  }
 
   public int getiDisplayStart() {
     return iDisplayStart;
