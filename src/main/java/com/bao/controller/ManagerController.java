@@ -131,17 +131,17 @@ public class ManagerController {
 		try {
 			return ResponseEntity.success(shopperMapper.deleteById(Long.parseLong(id)));
 		} catch (Exception e) {
-			logger.error("error to delete product", e);
+			logger.error("error to delete shopper", e);
 			return ResponseEntity.error("删除商家失败", e);
 		}
 	}
 
-	@RequestMapping(value = "/getShopper/{id}", method = RequestMethod.POST)
+	@RequestMapping(value = "/getShopper/{id}", method = RequestMethod.GET)
 	public ResponseEntity<?> getShopperById(@PathVariable("id") String id) {
 		try {
 			return ResponseEntity.success(shopperMapper.selectByPrimaryKey(Long.parseLong(id)));
 		} catch (Exception e) {
-			logger.error("error to delete product", e);
+			logger.error("error to  query shopper", e);
 			return ResponseEntity.error("查询商家失败", e);
 		}
 	}
