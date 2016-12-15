@@ -39,17 +39,20 @@ public class ShopperManagerController {
 		try {
 			String loginName = shopper.getLoginName();
 			String loginPassword = shopper.getLoginPassword();
+			boolean isFirstLogin = false;
 			if (StringUtils.isBlank(loginName) || StringUtils.isBlank(loginPassword)) {
 				return ResponseEntity.error("用户名和密码不能为空", null);
 			}
 			LoginResponse loginResponse = new LoginResponse();
-			shopper.setLoginPassword(DigestUtils.md5Hex(loginPassword));
+			if (stringRedisTemplate.opsForValue().get("isUpdated") == null) {
+				isFirstLogin = true;
+				shopper.setLoginPassword(loginPassword);
+			} else {
+				shopper.setLoginPassword(DigestUtils.md5Hex(loginPassword));
+			}
 			shopper = shopperMapper.loginShopper(shopper);
 			if (shopper != null) {// 登录成功
-				String flag = stringRedisTemplate.opsForValue().getAndSet(String.valueOf(shopper.getId()), "1");
-				if (flag == null) {
-					loginResponse.setFirstLogin(true);
-				}
+				loginResponse.setFirstLogin(isFirstLogin);
 				String uuid = UUID.randomUUID().toString();
 				stringRedisTemplate.opsForValue().set(ConstantValue.USER_TOKEN + uuid, String.valueOf(shopper.getId()),
 						12, TimeUnit.HOURS);
@@ -78,6 +81,7 @@ public class ShopperManagerController {
 			shopper.setId(Long.parseLong(id));
 			shopper.setLoginPassword(DigestUtils.md5Hex(shopper.getLoginPassword()));
 			shopperMapper.updatePassword(shopper);
+			stringRedisTemplate.opsForValue().set("isUpdated", "1");
 			stringRedisTemplate.delete(ConstantValue.USER_TOKEN + token);
 			return ResponseEntity.success(true);
 		} catch (Exception e) {

@@ -40,7 +40,7 @@ public class ShopperMapper {
 			}
 		}
 		shopper.setLoginName(contactWay);
-		shopper.setLoginPassword(DigestUtils.md5Hex(password));
+		shopper.setLoginPassword(password);
 		if (this.sqlSessionTemplate.insert("createShopper", shopper) > 0) {
 			response.setUserName(shopper.getLoginName());
 			response.setPassword(password);
