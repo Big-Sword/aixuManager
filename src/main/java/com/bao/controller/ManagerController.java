@@ -136,4 +136,14 @@ public class ManagerController {
 		}
 	}
 
+	@RequestMapping(value = "/getShopper/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> getShopperById(@PathVariable("id") String id) {
+		try {
+			return ResponseEntity.success(shopperMapper.selectByPrimaryKey(Long.parseLong(id)));
+		} catch (Exception e) {
+			logger.error("error to delete product", e);
+			return ResponseEntity.error("查询商家失败", e);
+		}
+	}
+
 }
