@@ -1,0 +1,45 @@
+server:
+    port: 8080
+
+logging.level.org.springframework.security: DEBUG
+
+spring:
+  application:
+    name: ms-duminjum
+    instance_id: 002
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: jdbc:mysql://1:3306/aixuManager?characterEncoding=utf-8
+    username: 1
+    password: 1
+  #数据库连接池配置
+    max-active: 200
+    max-idle: 100
+    min-idle: 50
+    initial-size: 20
+    test-on-borrow: false
+    test-on-return: false
+    test-while-idle: true
+    validation-query: select 1
+    #每10分钟收集空闲连接，单位毫秒
+    time-between-eviction-runs-millis: 600000
+    #连接的最大空闲时间，单位毫秒，60分钟
+    min-evictable-idle-time-millis: 3600000
+    max-wait: 60000
+
+spring.redis.host: 1
+spring.redis.port: 1
+spring.redis.password: 1
+spring.redis.pool.max-active: 2000
+spring.redis.pool.max-wait: 10000
+spring.redis.pool.max-idle: 500
+spring.redis.timeout: 30000
+multipart.maxFileSize: 10MB
+multipart.maxRequestSize: 20MB
+ #multipart.maxRequestSize=30MB
+
+logging:
+  file: /logs/ms-duminjun.log
+  level.*: INFO
+
+mybatis.config: classpath:mybatis-config.xml
