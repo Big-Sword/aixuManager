@@ -102,6 +102,12 @@
 		</if>
 	</select>
 
+	<select id="count" resultType="java.lang.Long">
+		select count(1) from
+		shopper where
+		is_delete = 0
+	</select>
+
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
 		select

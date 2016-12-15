@@ -337,4 +337,10 @@
 			and order_time = #{orders.orderTime}
 		</if>
 	</select>
+
+	<select id="count" resultType="java.lang.Long">
+		select count(1) from
+		orders where
+		is_delete = 0
+	</select>
 </mapper>
