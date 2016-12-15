@@ -44,7 +44,7 @@ public class ShopperManagerController {
 				return ResponseEntity.error("用户名和密码不能为空", null);
 			}
 			LoginResponse loginResponse = new LoginResponse();
-			if (stringRedisTemplate.opsForValue().get("isUpdated") == null) {
+			if (stringRedisTemplate.opsForValue().get("isUpdated" + loginName) == null) {
 				isFirstLogin = true;
 				shopper.setLoginPassword(loginPassword);
 			} else {
@@ -77,11 +77,12 @@ public class ShopperManagerController {
 				return ResponseEntity.error("密码不能为空", null);
 			}
 			String id = String.valueOf(request.getAttribute("loginId"));
+			Shopper oldShopper = shopperMapper.selectByPrimaryKey(Long.parseLong(id));
 			String token = String.valueOf(request.getAttribute("token"));
 			shopper.setId(Long.parseLong(id));
 			shopper.setLoginPassword(DigestUtils.md5Hex(shopper.getLoginPassword()));
 			shopperMapper.updatePassword(shopper);
-			stringRedisTemplate.opsForValue().set("isUpdated", "1");
+			stringRedisTemplate.opsForValue().set("isUpdated" + oldShopper.getLoginName(), "1");
 			stringRedisTemplate.delete(ConstantValue.USER_TOKEN + token);
 			return ResponseEntity.success(true);
 		} catch (Exception e) {
