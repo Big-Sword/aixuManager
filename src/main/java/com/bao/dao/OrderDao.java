@@ -31,77 +31,76 @@ import java.util.stream.Collectors;
 @Component
 @EnableTransactionManagement
 public class OrderDao {
-	@Autowired
-	private OrderMapper orderMapper;
-	@Autowired
-	private OrderDetailMapper orderDetailMapper;
-	@Autowired
-	private ShopperMapper shopperMapper;
-	@Autowired
-	private ProductMapper productMapper;
+  @Autowired
+  private OrderMapper orderMapper;
+  @Autowired
+  private OrderDetailMapper orderDetailMapper;
+  @Autowired
+  private ShopperMapper shopperMapper;
+  @Autowired
+  private ProductMapper productMapper;
 
-	@Transactional(propagation = Propagation.REQUIRED)
-	public void makeOrder(OrderingRequest request) {
-		// get userId from somewhere
-		long userId = 1L;
-		Shopper shopper = shopperMapper.selectByPrimaryKey(userId);
-		if (shopper == null)
-			throw new SystemException(500, "shopper不存在");
-		// check request
-		List<OrderDetailItem> orderDetailItems = request.getOrderDetailItems();
-		if (orderDetailItems.size() == 0)
-			throw new SystemException(500, "商品不能为空");
-		if (request.getDeliveryTime() == 0 || request.getWeddingTime() == 0)
-			throw new SystemException(500, "时间不能为空");
-		List<Long> productIds = orderDetailItems.stream().map(n -> n.getProductId()).distinct().collect(Collectors.toList());
-		if (productIds.size() != orderDetailItems.size()) throw new SystemException(500, "请合并相同商品下单");
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void makeOrder(OrderingRequest request) {
+    // get userId from somewhere
+    long userId = 1L;
+    Shopper shopper = shopperMapper.selectByPrimaryKey(userId);
+    if (shopper == null) throw new SystemException(500, "shopper不存在");
+    // check request
+    List<OrderDetailItem> orderDetailItems = request.getOrderDetailItems();
+    if (orderDetailItems.size() == 0) throw new SystemException(500, "商品不能为空");
+    if (request.getDeliveryTime() == 0 || request.getWeddingTime() == 0)
+      throw new SystemException(500, "时间不能为空");
+    List<Long> productIds = orderDetailItems.stream().map(n -> n.getProductId()).distinct()
+        .collect(Collectors.toList());
+    if (productIds.size() != orderDetailItems.size()) throw new SystemException(500, "请合并相同商品下单");
 
-		Orders orders = new Orders();
-		orders.setOrderNum(OrderUtils.generatorOrderNum());
-		orders.setShopperId(userId);
-		orders.setCustomer(shopper.getContactName());
-		orders.setContact(shopper.getContactWay());
-		orders.setAddress(shopper.getAddress());
-		orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
-		orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
-		orders.setOrderTime(new Timestamp(System.currentTimeMillis()));
-		orders.setStatus(0);// 1下单成功
-		orders.setOrderPrice(BigDecimal.ZERO);
+    Orders orders = new Orders();
+    orders.setOrderNum(OrderUtils.generatorOrderNum());
+    orders.setShopperId(userId);
+    orders.setCustomer(shopper.getContactName());
+    orders.setContact(shopper.getContactWay());
+    orders.setAddress(shopper.getAddress());
+    orders.setShopperName(shopper.getName());
+    orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
+    orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
+    orders.setOrderTime(new Timestamp(System.currentTimeMillis()));
+    orders.setStatus(0);// 1下单成功
+    orders.setOrderPrice(BigDecimal.ZERO);
 
-		orderMapper.insertSelective(orders);
+    orderMapper.insertSelective(orders);
 
-		// check product
-		List<OrderDetail> orderDetails = new ArrayList<>();
-		BigDecimal orderPrice = BigDecimal.ZERO;
+    // check product
+    List<OrderDetail> orderDetails = new ArrayList<>();
+    BigDecimal orderPrice = BigDecimal.ZERO;
 
-		for (OrderDetailItem orderDetailItem : orderDetailItems) {
-			if (orderDetailItem.getProductNum() <= 0 || orderDetailItem.getProductNum() >= 9999)
-				throw new SystemException(500, "商品件数不符合规则");
-			Product product = productMapper.selectById(orderDetailItem.getProductId());
-			if (product == null)
-				throw new SystemException(500, "商品不存在");
-			OrderDetail orderDetail = new OrderDetail();
-			orderDetail.setOrderId(orders.getId());
-			orderDetail.setProductId(product.getId());
-			orderDetail.setProductCount(orderDetailItem.getProductNum());
-			orderDetail.setName(product.getName());
-			orderDetail.setPicUrl(product.getPicUrl());
-			orderDetail.setContent(product.getContent());
-			orderDetail.setPrice(product.getPrice());
-			orderDetail.setModelType(product.getModelType());
-			orderDetail.setColourType(product.getColourType());
+    for (OrderDetailItem orderDetailItem : orderDetailItems) {
+      if (orderDetailItem.getProductNum() <= 0 || orderDetailItem.getProductNum() >= 9999)
+        throw new SystemException(500, "商品件数不符合规则");
+      Product product = productMapper.selectById(orderDetailItem.getProductId());
+      if (product == null) throw new SystemException(500, "商品不存在");
+      OrderDetail orderDetail = new OrderDetail();
+      orderDetail.setOrderId(orders.getId());
+      orderDetail.setProductId(product.getId());
+      orderDetail.setProductCount(orderDetailItem.getProductNum());
+      orderDetail.setName(product.getName());
+      orderDetail.setPicUrl(product.getPicUrl());
+      orderDetail.setContent(product.getContent());
+      orderDetail.setPrice(product.getPrice());
+      orderDetail.setModelType(product.getModelType());
+      orderDetail.setColourType(product.getColourType());
 
-			orderDetails.add(orderDetail);
+      orderDetails.add(orderDetail);
 
-			orderPrice = orderPrice
-					.add(product.getPrice().multiply(BigDecimal.valueOf(orderDetailItem.getProductNum())));
-		}
-		Orders forUpdate = new Orders();
-		forUpdate.setId(orders.getId());
-		forUpdate.setStatus(1);
-		forUpdate.setOrderPrice(orderPrice);
-		orderDetailMapper.batchInsert(orderDetails);
-		orderMapper.updateByPrimaryKeySelective(forUpdate);
-	}
+      orderPrice = orderPrice
+          .add(product.getPrice().multiply(BigDecimal.valueOf(orderDetailItem.getProductNum())));
+    }
+    Orders forUpdate = new Orders();
+    forUpdate.setId(orders.getId());
+    forUpdate.setStatus(1);
+    forUpdate.setOrderPrice(orderPrice);
+    orderDetailMapper.batchInsert(orderDetails);
+    orderMapper.updateByPrimaryKeySelective(forUpdate);
+  }
 
 }

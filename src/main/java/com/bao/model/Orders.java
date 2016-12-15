@@ -13,6 +13,7 @@ public class Orders {
 	private Long id;
 	private String orderNum;//订单号
 	private Long shopperId;
+	private String shopperName;
 	private BigDecimal orderPrice;//订单总额
 	private String customer;//收货人
 	private String contact;//联系方式
@@ -21,11 +22,22 @@ public class Orders {
 	private Timestamp deliveryTime;//送货时间
 	private Timestamp weddingTime;//婚礼时间
 	private Timestamp orderTime;//下单时间
+	
 
 	private int isDelete;
 	private Timestamp updatedAt;
+	
+	
 
-	public Long getId() {
+	public String getShopperName() {
+    return shopperName;
+  }
+
+  public void setShopperName(String shopperName) {
+    this.shopperName = shopperName;
+  }
+
+  public Long getId() {
 		return id;
 	}
 
