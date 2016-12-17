@@ -70,6 +70,27 @@ public class OrderController {
     }
   }
 
+
+  @RequestMapping(value = "/ordercancel/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> orderCancel(@PathVariable("id") Long orderId) {
+    try {
+      if (orderId == null) throw new SystemException(500, "orderId不能为空");
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      if (orders == null) throw new SystemException(500, "找不到该订单");
+
+      if (orders.getStatus() != 0) throw new SystemException(500, "订单状态不能取消");
+      orders.setStatus(4);
+      orderMapper.updateByPrimaryKeySelective(orders);
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order orderdetail", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order orderdetail", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
   /* shopper use */
   @RequestMapping(value = "/ordering", method = RequestMethod.POST)
   public ResponseEntity<?> ordering(@RequestBody OrderingRequest request) {
