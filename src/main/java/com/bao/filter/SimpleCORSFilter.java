@@ -35,79 +35,87 @@ import com.bao.constant.ConstantValue;
 @Component
 public class SimpleCORSFilter implements Filter {
 
-  @Autowired
-  private StringRedisTemplate stringRedisTemplate;
+	@Autowired
+	private StringRedisTemplate stringRedisTemplate;
 
-  /**
-   * 初始化
-   *
-   * @param filterConfig
-   * @throws ServletException
-   */
-  @Override
-  public void init(final FilterConfig filterConfig) throws ServletException {
-    // left blank intentionally
-  }
+	/**
+	 * 初始化
+	 *
+	 * @param filterConfig
+	 * @throws ServletException
+	 */
+	@Override
+	public void init(final FilterConfig filterConfig) throws ServletException {
+		// left blank intentionally
+	}
 
-  /**
-   * 过滤
-   *
-   * @param req
-   * @param res
-   * @param filterChain
-   * @throws IOException
-   * @throws ServletException
-   */
-  @Override
-  public void doFilter(final ServletRequest req, final ServletResponse res,
-      final FilterChain filterChain) throws IOException, ServletException {
-    final HttpServletResponse response = (HttpServletResponse) res;
-    final HttpServletRequest request = (HttpServletRequest) req;
+	/**
+	 * 过滤
+	 *
+	 * @param req
+	 * @param res
+	 * @param filterChain
+	 * @throws IOException
+	 * @throws ServletException
+	 */
+	@Override
+	public void doFilter(final ServletRequest req, final ServletResponse res, final FilterChain filterChain)
+			throws IOException, ServletException {
+		final HttpServletResponse response = (HttpServletResponse) res;
+		final HttpServletRequest request = (HttpServletRequest) req;
 
-    response.setHeader("Access-Control-Allow-Origin", "*");
-    response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
-    response.setHeader("Access-Control-Max-Age", "3600");
-    response.setHeader("Access-Control-Allow-Headers",
-        "x-requested-with,accept,Content-Type,authorization,x-token");
-    if (request.getMethod().equalsIgnoreCase("options")) {
-      response.setStatus(200);
-      return;
-    }
-    String uri = request.getRequestURI();
-    String token = request.getHeader("x-token");
+		response.setHeader("Access-Control-Allow-Origin", "*");
+		response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT");
+		response.setHeader("Access-Control-Max-Age", "3600");
+		response.setHeader("Access-Control-Allow-Headers",
+				"x-requested-with,accept,Content-Type,authorization,x-token,type");
+		if (request.getMethod().equalsIgnoreCase("options")) {
+			response.setStatus(200);
+			return;
+		}
+		String uri = request.getRequestURI();
+		String token = request.getHeader("x-token");
+		String type = request.getHeader("type");
 
-    if (uri.indexOf("/common") < 0) {//
-      if (StringUtils.isBlank((token))) {
-        response.setStatus(401);
-        return;
-      } else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
-        String shopperId = stringRedisTemplate.opsForValue().get(ConstantValue.USER_TOKEN + token);
-        String managerId =
-            stringRedisTemplate.opsForValue().get(ConstantValue.MANAGER_TOKEN + token);
-        if (StringUtils.isBlank(shopperId) && StringUtils.isBlank(managerId)) {
-          response.setStatus(402);
-          return;
-        }
-        if (StringUtils.isNotBlank(shopperId)) {
-          request.setAttribute("loginId", shopperId);
-        }
-        if (StringUtils.isNotBlank(managerId)) {
-          request.setAttribute("managerId", managerId);
-        }
-      } else {
-        request.setAttribute("loginId", "testId");
-        request.setAttribute("managerId", "testId");
-      }
-    } else {
-      request.setAttribute("loginId", "commonId");
-      request.setAttribute("managerId", "commonId");
+		if (uri.indexOf("/common") < 0) {//
+			if (StringUtils.isBlank((token))) {
+				response.setStatus(401);
+				return;
+			} else if (!token.equals("q1w2e3r4t5y6u7i8o9p0")) {
+				String shopperId;
+				String managerId;
+				if ("1".equals(type)) {
+					shopperId = stringRedisTemplate.opsForValue().get(ConstantValue.USER_TOKEN + token);
+					if (StringUtils.isNotBlank(shopperId)) {
+						request.setAttribute("loginId", shopperId);
+					} else {
+						response.setStatus(402);
+						return;
+					}
+				} else {
+					managerId = stringRedisTemplate.opsForValue().get(ConstantValue.MANAGER_TOKEN + token);
+					if (StringUtils.isNotBlank(managerId)) {
+						request.setAttribute("managerId", managerId);
+					} else {
+						response.setStatus(402);
+						return;
+					}
+				}
 
-    }
-    filterChain.doFilter(req, res);
-  }
+			} else {
+				request.setAttribute("loginId", "testId");
+				request.setAttribute("managerId", "testId");
+			}
+		} else {
+			request.setAttribute("loginId", "commonId");
+			request.setAttribute("managerId", "commonId");
 
-  @Override
-  public void destroy() {
-    // left blank intentionally
-  }
+		}
+		filterChain.doFilter(req, res);
+	}
+
+	@Override
+	public void destroy() {
+		// left blank intentionally
+	}
 }
