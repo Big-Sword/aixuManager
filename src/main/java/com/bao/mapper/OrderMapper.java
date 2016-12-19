@@ -15,43 +15,51 @@ import java.util.Map;
 @Component
 @Slf4j
 public class OrderMapper {
-    @Autowired
-    private SqlSessionTemplate sqlSessionTemplate;
+  @Autowired
+  private SqlSessionTemplate sqlSessionTemplate;
 
-    public int deleteByPrimaryKey(Long id){
-        return this.sqlSessionTemplate.delete("com.bao.mapper.OrderMapper.deleteByPrimaryKey",id);
-    }
+  public int deleteByPrimaryKey(Long id) {
+    return this.sqlSessionTemplate.delete("com.bao.mapper.OrderMapper.deleteByPrimaryKey", id);
+  }
 
-    public long insert(Orders record){
-        return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insert",record);
-    }
+  public long insert(Orders record) {
+    return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insert", record);
+  }
 
-    public long insertSelective(Orders record){
-        return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insertSelective",record);
-    }
+  public long insertSelective(Orders record) {
+    return this.sqlSessionTemplate.insert("com.bao.mapper.OrderMapper.insertSelective", record);
+  }
 
-    public Orders selectByPrimaryKey(Long id){
-        return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.selectByPrimaryKey",id);
-    }
+  public Orders selectByPrimaryKey(Long id) {
+    return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.selectByPrimaryKey", id);
+  }
 
-    public int updateByPrimaryKeySelective(Orders record){
-        return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKeySelective",record);
-    }
+  public int updateByPrimaryKeySelective(Orders record) {
+    return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKeySelective",
+        record);
+  }
 
-    public int updateByPrimaryKey(Orders record){
-        return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKey",record);
-    }
+  public int updateByPrimaryKey(Orders record) {
+    return this.sqlSessionTemplate.update("com.bao.mapper.OrderMapper.updateByPrimaryKey", record);
+  }
 
-    public List<Map<String, Object>> selectBySelective(DataTableReqInfo dataTableReqInfo,Orders orders) {
-        Map<String,Object> param = new HashMap<>();
-        param.put("dataTableReqInfo",dataTableReqInfo);
-        param.put("orders",orders);
-        return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderMapper.selectBySelective", param);
-    }
-    public int countBySelective(DataTableReqInfo dataTableReqInfo,Orders orders) {
-        Map<String,Object> param = new HashMap<>();
-        param.put("dataTableReqInfo",dataTableReqInfo);
-        param.put("orders",orders);
-        return this.sqlSessionTemplate.selectOne("countBySelective", param);
-    }
+  public List<Map<String, Object>> selectBySelective(DataTableReqInfo dataTableReqInfo,
+      Orders orders) {
+    Map<String, Object> param = new HashMap<>();
+    param.put("dataTableReqInfo", dataTableReqInfo);
+    param.put("orders", orders);
+    return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderMapper.selectBySelective",
+        param);
+  }
+
+  public int countBySelective(DataTableReqInfo dataTableReqInfo, Orders orders) {
+    Map<String, Object> param = new HashMap<>();
+    param.put("dataTableReqInfo", dataTableReqInfo);
+    param.put("orders", orders);
+    return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.countBySelective", param);
+  }
+
+  public long count() {
+    return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.count");
+  }
 }

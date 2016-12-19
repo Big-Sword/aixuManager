@@ -108,4 +108,10 @@
 		</if>
 	</select>
 
+	<select id="count" resultType="java.lang.Long">
+		select count(1) from
+		product where
+		is_delete = 0
+	</select>
+
 </mapper>

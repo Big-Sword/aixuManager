@@ -39,7 +39,9 @@ public class ProductMapper {
   }
 
   public boolean deleteById(long id) throws Exception {
-    return this.sqlSessionTemplate.update("com.bao.model.Product.deleteById", id) == 0 ? false : true;
+    return this.sqlSessionTemplate.update("com.bao.model.Product.deleteById", id) == 0
+        ? false
+        : true;
   }
 
   public Product selectById(long id) {
@@ -47,11 +49,16 @@ public class ProductMapper {
   }
 
   public int countAllProducts(DataTableReqInfo dataTableReqInfo) {
-    return this.sqlSessionTemplate.selectOne("com.bao.model.Product.countTotalProduct", dataTableReqInfo);
+    return this.sqlSessionTemplate.selectOne("com.bao.model.Product.countTotalProduct",
+        dataTableReqInfo);
   }
 
   public List<Map<String, Object>> selectAll(DataTableReqInfo dataTableReqInfo) {
     return this.sqlSessionTemplate.selectList("com.bao.model.Product.selectAll", dataTableReqInfo);
+  }
+
+  public long count() {
+    return this.sqlSessionTemplate.selectOne("com.bao.model.Product.count");
   }
 
 

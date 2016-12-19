@@ -23,8 +23,62 @@ public class Orders {
 	private Timestamp weddingTime;//婚礼时间
 	private Timestamp orderTime;//下单时间
 	
+	private Timestamp deliveryTimeS;//送货时间
+    private Timestamp weddingTimeS;//婚礼时间
+    private Timestamp orderTimeS;//下单时间
+    private Timestamp deliveryTimeE;//送货时间
+    private Timestamp weddingTimeE;//婚礼时间
+    private Timestamp orderTimeE;//下单时间
 
-	private int isDelete;
+	public Timestamp getDeliveryTimeS() {
+      return deliveryTimeS;
+    }
+
+    public void setDeliveryTimeS(Timestamp deliveryTimeS) {
+      this.deliveryTimeS = deliveryTimeS;
+    }
+
+    public Timestamp getWeddingTimeS() {
+      return weddingTimeS;
+    }
+
+    public void setWeddingTimeS(Timestamp weddingTimeS) {
+      this.weddingTimeS = weddingTimeS;
+    }
+
+    public Timestamp getOrderTimeS() {
+      return orderTimeS;
+    }
+
+    public void setOrderTimeS(Timestamp orderTimeS) {
+      this.orderTimeS = orderTimeS;
+    }
+
+    public Timestamp getDeliveryTimeE() {
+      return deliveryTimeE;
+    }
+
+    public void setDeliveryTimeE(Timestamp deliveryTimeE) {
+      this.deliveryTimeE = deliveryTimeE;
+    }
+
+    public Timestamp getWeddingTimeE() {
+      return weddingTimeE;
+    }
+
+    public void setWeddingTimeE(Timestamp weddingTimeE) {
+      this.weddingTimeE = weddingTimeE;
+    }
+
+    public Timestamp getOrderTimeE() {
+      return orderTimeE;
+    }
+
+    public void setOrderTimeE(Timestamp orderTimeE) {
+      this.orderTimeE = orderTimeE;
+    }
+
+  private int isDelete;
 	private Timestamp updatedAt;
 	
 	
