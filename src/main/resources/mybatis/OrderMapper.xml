@@ -219,7 +219,7 @@
 		select
 		<include refid="Base_Column_List" />
 		from orders
-		where is_delete = 0
+		where is_delete = 0 and status != -1
 		<if test="dataTableReqInfo.sSearch!=''">
 			and order_num like
 			CONCAT('%','${dataTableReqInfo.sSearch}','%' )
@@ -302,7 +302,7 @@
 
 	<select id="countBySelective" resultType="java.lang.Integer">
 		select count(1) from
-		orders where is_delete = 0
+		orders where is_delete = 0 and status != -1
 		<if test="orders.orderNum != null">
 			and order_num = #{orders.orderNum}
 		</if>
@@ -341,6 +341,6 @@
 	<select id="count" resultType="java.lang.Long">
 		select count(1) from
 		orders where
-		is_delete = 0
+		is_delete = 0 and status != -1
 	</select>
 </mapper>
