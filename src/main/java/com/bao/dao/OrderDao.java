@@ -12,6 +12,7 @@ import com.bao.model.Orders;
 import com.bao.model.Product;
 import com.bao.model.Shopper;
 import com.bao.utils.OrderUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -41,9 +42,9 @@ public class OrderDao {
   private ProductMapper productMapper;
 
   @Transactional(propagation = Propagation.REQUIRED)
-  public void makeOrder(OrderingRequest request) {
+  public long makeOrder(OrderingRequest request,String loginId) {
     // get userId from somewhere
-    long userId = 1L;
+    long userId = NumberUtils.toLong(loginId);
     Shopper shopper = shopperMapper.selectByPrimaryKey(userId);
     if (shopper == null) throw new SystemException(500, "shopper不存在");
     // check request
@@ -58,14 +59,14 @@ public class OrderDao {
     Orders orders = new Orders();
     orders.setOrderNum(OrderUtils.generatorOrderNum());
     orders.setShopperId(userId);
-    orders.setCustomer(shopper.getContactName());
-    orders.setContact(shopper.getContactWay());
-    orders.setAddress(shopper.getAddress());
+    orders.setCustomer(request.getCustomer());
+    orders.setContact(request.getContact());
+    orders.setAddress(request.getAddress());
     orders.setShopperName(shopper.getName());
     orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
     orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
     orders.setOrderTime(new Timestamp(System.currentTimeMillis()));
-    orders.setStatus(0);// 1下单成功
+    orders.setStatus(-2);// -1预下单 0下单成功待确定
     orders.setOrderPrice(BigDecimal.ZERO);
 
     orderMapper.insertSelective(orders);
@@ -97,10 +98,11 @@ public class OrderDao {
     }
     Orders forUpdate = new Orders();
     forUpdate.setId(orders.getId());
-    forUpdate.setStatus(1);
+    forUpdate.setStatus(-1); //-1预下单 0下单成功待确定
     forUpdate.setOrderPrice(orderPrice);
     orderDetailMapper.batchInsert(orderDetails);
     orderMapper.updateByPrimaryKeySelective(forUpdate);
-  }
 
+    return orders.getId();
+  }
 }

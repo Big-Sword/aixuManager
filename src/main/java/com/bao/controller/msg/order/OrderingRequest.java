@@ -10,6 +10,9 @@ public class OrderingRequest {
 
     private long deliveryTime;//送货时间
     private long weddingTime;//婚礼时间
+    private String customer;//收货人
+    private String contact;//联系方式
+    private String address;//地址
     private List<OrderDetailItem> orderDetailItems = new ArrayList<>();//商品
 
     public long getDeliveryTime() {
@@ -36,11 +39,38 @@ public class OrderingRequest {
         this.orderDetailItems = orderDetailItems;
     }
 
+    public String getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(String customer) {
+        this.customer = customer;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Override
     public String toString() {
         return "OrderingRequest{" +
                 "deliveryTime=" + deliveryTime +
                 ", weddingTime=" + weddingTime +
+                ", customer='" + customer + '\'' +
+                ", contact='" + contact + '\'' +
+                ", address='" + address + '\'' +
                 ", orderDetailItems=" + orderDetailItems +
                 '}';
     }

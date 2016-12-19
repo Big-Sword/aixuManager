@@ -8,7 +8,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bao.controller.msg.order.OrderingResponse;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -91,12 +93,47 @@ public class OrderController {
     }
   }
 
+  @RequestMapping(value = "/ordercheck/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> ordercheck(@PathVariable("id") Long orderId) {
+    try {
+      if (orderId == null) throw new SystemException(500, "orderId不能为空");
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      if (orders == null) throw new SystemException(500, "找不到该订单");
+
+      if (orders.getStatus() != -1) throw new SystemException(500, "订单状态不能确认");
+      orders.setStatus(0);
+      orderMapper.updateByPrimaryKeySelective(orders);
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order ordercheck", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order ordercheck", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
   /* shopper use */
   @RequestMapping(value = "/ordering", method = RequestMethod.POST)
-  public ResponseEntity<?> ordering(@RequestBody OrderingRequest request) {
+  public ResponseEntity<?> ordering(@RequestBody OrderingRequest request,HttpServletRequest httpRequest) {
     try {
-      orderDao.makeOrder(request);
-      return ResponseEntity.success(true);
+      String loginId = String.valueOf(httpRequest.getAttribute("loginId"));
+      if (StringUtils.isBlank(loginId)) {
+        throw new IllegalArgumentException("loginId参数不正确");
+      }
+
+      OrderingResponse response = new OrderingResponse();
+
+      long orderId = orderDao.makeOrder(request,loginId);//预下单
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      OrderDetail orderDetail = new OrderDetail();
+      orderDetail.setOrderId(orderId);
+      List<OrderDetail> orderDetails = orderDetailMapper.selectBySelective(orderDetail);
+
+      response.setOrders(orders);
+      response.setOrderDetails(orderDetails);
+
+      return ResponseEntity.success(response);
     } catch (SystemException e) {
       logger.error("order ordering", e);
       return ResponseEntity.error(e.getErrorMessage(), e);
@@ -107,10 +144,16 @@ public class OrderController {
   }
 
   @RequestMapping(value = "/myorder", method = RequestMethod.POST)
-  public Object myorder(@RequestBody String aoData) {
+  public Object myorder(@RequestBody String aoData,HttpServletRequest httpRequest) {
     try {
+      String loginId = String.valueOf(httpRequest.getAttribute("loginId"));
+      if (StringUtils.isBlank(loginId)) {
+        throw new IllegalArgumentException("loginId参数不正确");
+      }
+
       DataTableReqInfo dataTableReqInfo = reciveAoData(aoData);
       Orders orders = new Orders();
+      orders.setShopperId(NumberUtils.toLong(loginId));
 
       List<Map<String, Object>> resultList =
           orderMapper.selectBySelective(dataTableReqInfo, orders);
