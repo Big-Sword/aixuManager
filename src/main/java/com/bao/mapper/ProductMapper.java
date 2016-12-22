@@ -61,5 +61,9 @@ public class ProductMapper {
     return this.sqlSessionTemplate.selectOne("com.bao.model.Product.count");
   }
 
+  public List<Product> findAll() {
+    return this.sqlSessionTemplate.selectList("com.bao.model.Product.findAll");
+  }
+
 
 }

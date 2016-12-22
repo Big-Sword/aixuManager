@@ -34,6 +34,13 @@
 		,is_delete
 	</sql>
 
+	<select id="findAll" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0
+	</select>
+
 
 
 	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
