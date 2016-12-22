@@ -5,9 +5,11 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.bao.controller.msg.order.OrderUpdateRequest;
 import com.bao.controller.msg.order.OrderingResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -72,7 +74,25 @@ public class OrderController {
     }
   }
 
+  //2 修改 只能修改购买数量 修改完状态变成 未确认  已确认和未确认 都能修改购买数量
+  @RequestMapping(value = "/orderupdate/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> orderupdate(@PathVariable("id") Long orderId,
+                                       @RequestBody OrderUpdateRequest request) {
+    try {
 
+      orderDao.updateOrder(request,orderId);
+
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order orderupdate", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order orderupdate", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+  //取消订单
   @RequestMapping(value = "/ordercancel/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderCancel(@PathVariable("id") Long orderId) {
     try {
@@ -85,14 +105,15 @@ public class OrderController {
       orderMapper.updateByPrimaryKeySelective(orders);
       return ResponseEntity.success(true);
     } catch (SystemException e) {
-      logger.error("order orderdetail", e);
+      logger.error("order ordercancel", e);
       return ResponseEntity.error(e.getErrorMessage(), e);
     } catch (Exception e) {
-      logger.error("order orderdetail", e);
+      logger.error("order ordercancel", e);
       return ResponseEntity.error("未知异常", e);
     }
   }
 
+  //预下单 下单
   @RequestMapping(value = "/ordercheck/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> ordercheck(@PathVariable("id") Long orderId) {
     try {
@@ -253,6 +274,71 @@ public class OrderController {
       return ResponseEntity.error("查询失败", e);
     }
   }
+
+  //1确认 只有待确认的状态才能确认
+  @RequestMapping(value = "/orderconfirm/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> orderConfirm(@PathVariable("id") Long orderId) {
+    try {
+      if (orderId == null) throw new SystemException(500, "orderId不能为空");
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      if (orders == null) throw new SystemException(500, "找不到该订单");
+
+      if (orders.getStatus() != 0) throw new SystemException(500, "订单状态不能确认");
+      orders.setStatus(1);
+      orderMapper.updateByPrimaryKeySelective(orders);
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+  //3 发货 只有已确认的才能发货
+  @RequestMapping(value = "/orderdispatch/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> orderdispatch(@PathVariable("id") Long orderId) {
+    try {
+      if (orderId == null) throw new SystemException(500, "orderId不能为空");
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      if (orders == null) throw new SystemException(500, "找不到该订单");
+
+      if (orders.getStatus() != 1) throw new SystemException(500, "订单状态不能发货");
+      orders.setStatus(2);
+      orderMapper.updateByPrimaryKeySelective(orders);
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+  //4 完成 只有已发货的才能完成
+  @RequestMapping(value = "/orderfinish/{id}", method = RequestMethod.POST)
+  public ResponseEntity<?> orderfinish(@PathVariable("id") Long orderId) {
+    try {
+      if (orderId == null) throw new SystemException(500, "orderId不能为空");
+      Orders orders = orderMapper.selectByPrimaryKey(orderId);
+      if (orders == null) throw new SystemException(500, "找不到该订单");
+
+      if (orders.getStatus() != 2) throw new SystemException(500, "订单状态不能完成");
+      orders.setStatus(3);
+      orderMapper.updateByPrimaryKeySelective(orders);
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("order orderconfirm", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+
 
   private DataTableReqInfo reciveAoData(String aoData) throws Exception {
     JSONArray jsonArray =

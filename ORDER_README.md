@@ -161,7 +161,7 @@ order/orderdetail/{id}
   ]
 }
 ```
-## 4 确认订单
+## 4 check订单
 #### 描述
 *  
 
@@ -184,4 +184,114 @@ order/ordercheck/{id}
   "data": true
 }
 ```
+## 5 修改订单
+#### 描述
+*  修改 只能修改购买数量 修改完状态变成 未确认  已确认和未确认 都能修改购买数量
+
+#### WEB API 地址
+```
+post
+order/orderupdate/{id}
+```
+
+#### 输入参数
+| 名称 | 类型  | 必填 | 传参位置 | 说明
+|-----|------|------|--------|--------|
+|deliveryTime|long|n|json|送货时间|
+|weddingTime|long|n|json|婚礼时间|
+|customer|varchar|n|json|收货人|
+|contact|varchar|n|json|联系方式|
+|address|varchar|n|json|地址|
+|orderDetailItems|List<OrderDetailItem>|y|json|需要修改的 产品id和数量|
+```
+{
+	"deliveryTime":1482128236000,
+	"weddingTime":1482128236000,
+	"customer":"飞",
+	"contact":"18515282828",
+	"address":"曹杨路",
+	"orderDetailItems":[{"productId":1,"productNum":3}]
+}
+```
+#### 返回参数
+```
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+```
+
+## 6 确认订单
+#### 描述
+*  只有待确认的状态才能确认
+
+#### WEB API 地址
+```
+post
+order/orderconfirm/{id}
+```
+
+#### 输入参数
+| 名称 | 类型  | 必填 | 传参位置 | 说明
+|-----|------|------|--------|--------|
+|id|long|y|url|订单号|
+
+#### 返回参数
+```
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+```
+
+## 7 发货订单
+#### 描述
+*  只有已确认的才能发货
+
+#### WEB API 地址
+```
+post
+order/orderdispatch/{id}
+```
+
+#### 输入参数
+| 名称 | 类型  | 必填 | 传参位置 | 说明
+|-----|------|------|--------|--------|
+|id|long|y|url|订单号|
+
+#### 返回参数
+```
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+```
+
+## 8 完成订单
+#### 描述
+*  
+
+#### WEB API 地址
+```
+post
+order/orderfinish/{id}
+```
+
+#### 输入参数
+| 名称 | 类型  | 必填 | 传参位置 | 说明
+|-----|------|------|--------|--------|
+|id|long|y|url|订单号|
+
+#### 返回参数
+```
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+```
+
 

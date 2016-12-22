@@ -1,6 +1,7 @@
 package com.bao.dao;
 
 import com.bao.controller.msg.order.OrderDetailItem;
+import com.bao.controller.msg.order.OrderUpdateRequest;
 import com.bao.controller.msg.order.OrderingRequest;
 import com.bao.framework.exception.SystemException;
 import com.bao.mapper.OrderDetailMapper;
@@ -12,6 +13,7 @@ import com.bao.model.Orders;
 import com.bao.model.Product;
 import com.bao.model.Shopper;
 import com.bao.utils.OrderUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -23,6 +25,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +43,51 @@ public class OrderDao {
   private ShopperMapper shopperMapper;
   @Autowired
   private ProductMapper productMapper;
+
+  @Transactional(propagation = Propagation.REQUIRED)
+  public void updateOrder(OrderUpdateRequest request, Long orderId) {
+    if (orderId == null) throw new SystemException(500, "orderId不能为空");
+    Orders orders = orderMapper.selectByPrimaryKey(orderId);
+    if (orders == null) throw new SystemException(500, "找不到该订单");
+
+    if (orders.getStatus() != 0 && orders.getStatus() != 1) throw new SystemException(500, "订单状态不能修改");
+
+    if (StringUtils.isNotBlank(request.getAddress())) orders.setAddress(request.getAddress());
+    if (StringUtils.isNotBlank(request.getContact())) orders.setContact(request.getContact());
+    if (StringUtils.isNotBlank(request.getCustomer())) orders.setCustomer(request.getCustomer());
+    if (! Objects.equals(request.getDeliveryTime(),0)) orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
+    if (! Objects.equals(request.getWeddingTime(),0)) orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
+
+    List<OrderDetailItem> requestDetailItems = request.getOrderDetailItems();
+    OrderDetail orderDetail = new OrderDetail();
+    orderDetail.setOrderId(orderId);
+    List<OrderDetail> orderDetails = orderDetailMapper.selectBySelective(orderDetail);
+    //修改订单数量
+    for (OrderDetailItem detailItem : requestDetailItems){
+      if (detailItem.getProductNum() <= 0 || detailItem.getProductNum() >= 9999)
+        throw new SystemException(500, "商品件数不符合规则");
+
+      boolean flag = false;
+      for (OrderDetail orderDetail1 : orderDetails){
+        if (Objects.equals(orderDetail1.getProductId(),detailItem.getProductId())){
+          orderDetail1.setProductCount(detailItem.getProductNum());
+          orderDetailMapper.updateByPrimaryKeySelective(orderDetail1);
+          flag = true;
+        }
+      }
+      if (! flag) throw new SystemException(500, "该订单不存在该商品,不能修改商品数量");
+    }
+    //重新计算价格
+    BigDecimal orderPrice = BigDecimal.ZERO;
+    List<OrderDetail> orderDetailsAfter = orderDetailMapper.selectBySelective(orderDetail);
+    for (OrderDetail orderDetail2 : orderDetailsAfter){
+      orderPrice = orderPrice
+              .add(orderDetail2.getPrice().multiply(BigDecimal.valueOf(orderDetail2.getProductCount())));
+    }
+    orders.setOrderPrice(orderPrice);
+    orders.setStatus(0);
+    orderMapper.updateByPrimaryKeySelective(orders);
+  }
 
   @Transactional(propagation = Propagation.REQUIRED)
   public long makeOrder(OrderingRequest request,String loginId) {
