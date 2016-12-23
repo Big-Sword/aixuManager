@@ -268,6 +268,37 @@ post
 }
 
 ```
+##1.7.1（产品信息推荐）
+## http://127.0.0.1:8080/product/common/recommend/{id}/{size}
+x-token
+
+``` 
+get
+``` 
+
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    {
+      "id": 1,
+      "name": "真假",
+      "picUrl": "ef4e67f1-4a38-47e2-87bc-70485f846f95.png~ef4e67f1-4a38-47e2-87bc-70485f846f95.png",
+      "content": "大象",
+      "price": 24.85,
+      "stock": 0,
+      "modelType": "来来来",
+      "colourType": "白色",
+      "remark": "无",
+      "isDelete": 0,
+      "createdAt": 1480905094000,
+      "updatedAt": 1480905094000
+    }
+  ]
+}
+```
+
 
 ##1.8（商家登录）
 ##http://localhost:8080/shopper/common/login

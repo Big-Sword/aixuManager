@@ -6,14 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
@@ -197,6 +191,19 @@ public class ProductController {
   @RequestMapping(value = "/common/findAll", method = RequestMethod.GET)
   public ResponseEntity<?> findAll() {
     return ResponseEntity.success(mapper.findAll());
+  }
+
+  @RequestMapping(value = "/common/recommend/{id}/{size}", method = RequestMethod.GET)
+  public ResponseEntity<?> recommend(@PathVariable("id") Long id,@PathVariable("size") Integer size) {
+    int showSize = (size == null) ? 4 : size;
+    List<Product> productList = mapper.findAll();
+    List<Product> products = new ArrayList<>();
+    productList.stream().forEach(n -> {
+      if (!Objects.equals(n.getId(), id) && products.size() < showSize){
+        products.add(n);
+      }
+    });
+    return ResponseEntity.success(products);
   }
 
 }
