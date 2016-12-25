@@ -41,6 +41,18 @@
 		where is_delete = 0
 	</select>
 
+	<select id="selectByIds" resultMap="BaseResultMap"
+		parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0 and id in (
+		<foreach collection="ids" item="id" separator=",">
+			#{id}
+		</foreach>
+		)
+	</select>
+
 
 
 	<select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">

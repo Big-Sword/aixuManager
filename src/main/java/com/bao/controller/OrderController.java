@@ -3,32 +3,39 @@ package com.bao.controller;
 import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.bao.controller.msg.order.OrderUpdateRequest;
-import com.bao.controller.msg.order.OrderingResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bao.constant.ConstantValue;
+import com.bao.controller.msg.Cart;
 import com.bao.controller.msg.DataTableReqInfo;
 import com.bao.controller.msg.DataTableRespInfo;
+import com.bao.controller.msg.order.OrderUpdateRequest;
 import com.bao.controller.msg.order.OrderingRequest;
+import com.bao.controller.msg.order.OrderingResponse;
 import com.bao.dao.OrderDao;
 import com.bao.framework.ResponseEntity;
+import com.bao.framework.exception.ServiceException;
 import com.bao.framework.exception.SystemException;
 import com.bao.mapper.OrderDetailMapper;
 import com.bao.mapper.OrderMapper;
@@ -36,6 +43,8 @@ import com.bao.mapper.ProductMapper;
 import com.bao.mapper.ShopperMapper;
 import com.bao.model.OrderDetail;
 import com.bao.model.Orders;
+import com.bao.model.Product;
+import com.bao.model.Shopper;
 
 /**
  * Created by asus on 2016/6/28.
@@ -49,11 +58,13 @@ public class OrderController {
   @Autowired
   private OrderDetailMapper orderDetailMapper;
   @Autowired
-  private ShopperMapper shopperMapper;
-  @Autowired
   private ProductMapper productMapper;
   @Autowired
   private OrderDao orderDao;
+  @Autowired
+  private StringRedisTemplate stringRedisTemplate;
+  @Autowired
+  private ShopperMapper shopperMapper;
 
   @RequestMapping(value = "/orderdetail/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderdetail(@PathVariable("id") Long orderId) {
@@ -74,13 +85,13 @@ public class OrderController {
     }
   }
 
-  //2 修改 只能修改购买数量 修改完状态变成 未确认  已确认和未确认 都能修改购买数量
+  // 2 修改 只能修改购买数量 修改完状态变成 未确认 已确认和未确认 都能修改购买数量
   @RequestMapping(value = "/orderupdate/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderupdate(@PathVariable("id") Long orderId,
-                                       @RequestBody OrderUpdateRequest request) {
+      @RequestBody OrderUpdateRequest request) {
     try {
 
-      orderDao.updateOrder(request,orderId);
+      orderDao.updateOrder(request, orderId);
 
       return ResponseEntity.success(true);
     } catch (SystemException e) {
@@ -92,7 +103,7 @@ public class OrderController {
     }
   }
 
-  //取消订单
+  // 取消订单
   @RequestMapping(value = "/ordercancel/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderCancel(@PathVariable("id") Long orderId) {
     try {
@@ -113,7 +124,7 @@ public class OrderController {
     }
   }
 
-  //预下单 下单
+  // 预下单 下单
   @RequestMapping(value = "/ordercheck/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> ordercheck(@PathVariable("id") Long orderId) {
     try {
@@ -136,7 +147,8 @@ public class OrderController {
 
   /* shopper use */
   @RequestMapping(value = "/ordering", method = RequestMethod.POST)
-  public ResponseEntity<?> ordering(@RequestBody OrderingRequest request,HttpServletRequest httpRequest) {
+  public ResponseEntity<?> ordering(@RequestBody OrderingRequest request,
+      HttpServletRequest httpRequest) {
     try {
       String loginId = String.valueOf(httpRequest.getAttribute("loginId"));
       if (StringUtils.isBlank(loginId)) {
@@ -145,7 +157,7 @@ public class OrderController {
 
       OrderingResponse response = new OrderingResponse();
 
-      long orderId = orderDao.makeOrder(request,loginId);//预下单
+      long orderId = orderDao.makeOrder(request, loginId);// 预下单
       Orders orders = orderMapper.selectByPrimaryKey(orderId);
       OrderDetail orderDetail = new OrderDetail();
       orderDetail.setOrderId(orderId);
@@ -165,7 +177,7 @@ public class OrderController {
   }
 
   @RequestMapping(value = "/myorder", method = RequestMethod.POST)
-  public Object myorder(@RequestBody String aoData,HttpServletRequest httpRequest) {
+  public Object myorder(@RequestBody String aoData, HttpServletRequest httpRequest) {
     try {
       String loginId = String.valueOf(httpRequest.getAttribute("loginId"));
       if (StringUtils.isBlank(loginId)) {
@@ -275,7 +287,7 @@ public class OrderController {
     }
   }
 
-  //1确认 只有待确认的状态才能确认
+  // 1确认 只有待确认的状态才能确认
   @RequestMapping(value = "/orderconfirm/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderConfirm(@PathVariable("id") Long orderId) {
     try {
@@ -296,7 +308,7 @@ public class OrderController {
     }
   }
 
-  //3 发货 只有已确认的才能发货
+  // 3 发货 只有已确认的才能发货
   @RequestMapping(value = "/orderdispatch/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderdispatch(@PathVariable("id") Long orderId) {
     try {
@@ -317,7 +329,7 @@ public class OrderController {
     }
   }
 
-  //4 完成 只有已发货的才能完成
+  // 4 完成 只有已发货的才能完成
   @RequestMapping(value = "/orderfinish/{id}", method = RequestMethod.POST)
   public ResponseEntity<?> orderfinish(@PathVariable("id") Long orderId) {
     try {
@@ -368,5 +380,92 @@ public class OrderController {
       }
     }
     return dataTableReqInfo;
+  }
+
+  @RequestMapping(value = "/cart/{id}/{count}", method = RequestMethod.POST)
+  public ResponseEntity<?> cart(@PathVariable("id") long productId,
+      @PathVariable("count") int count, HttpServletRequest request) {
+    try {
+      String loginId = (String) request.getAttribute("loginId");
+
+      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+
+      if (shopper == null) {
+        throw new ServiceException(500, "您还未登录");
+      }
+      if (productId <= 0) throw new ServiceException(500, "产品不存在");
+      Product product = productMapper.selectById(productId);
+      if (product == null) throw new ServiceException(500, "产品不存在");
+      if (count <= 0) throw new ServiceException(500, "至少购买一件产品");
+
+      stringRedisTemplate.opsForHash().put(ConstantValue.CART + shopper.getId(),
+          String.valueOf(productId), String.valueOf(count));
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("cart", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("cart", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+  @RequestMapping(value = "/myCart", method = RequestMethod.GET)
+  public ResponseEntity<?> myCart(HttpServletRequest request) {
+    try {
+      String loginId = (String) request.getAttribute("loginId");
+      List<Cart> carts = new ArrayList<>();
+      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+
+      if (shopper == null) {
+        throw new ServiceException(500, "您还未登录");
+      }
+      Set<Object> keys =
+          stringRedisTemplate.opsForHash().keys(ConstantValue.CART + shopper.getId());
+      if (CollectionUtils.isEmpty(keys)) {
+        return ResponseEntity.success(carts);
+      }
+      List<Product> products = productMapper.selectByIds(keys);
+      Cart cart;
+      for (Product product : products) {
+        cart = new Cart();
+        BeanUtils.copyProperties(product, cart);
+        try {
+          cart.setCount(Integer.parseInt(String.valueOf(stringRedisTemplate.opsForHash()
+              .get(ConstantValue.CART + shopper.getId(), String.valueOf(product.getId())))));
+        } catch (Exception e) {
+          cart.setCount(1);
+        }
+        carts.add(cart);
+      }
+
+      return ResponseEntity.success(carts);
+    } catch (SystemException e) {
+      logger.error("mycart", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("cart", e);
+      return ResponseEntity.error("未知异常", e);
+    }
+  }
+
+  @RequestMapping(value = "/delCart/{id}", method = RequestMethod.DELETE)
+  public ResponseEntity<?> delCart(@PathVariable("id") long productId, HttpServletRequest request) {
+    try {
+      String loginId = (String) request.getAttribute("loginId");
+      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+      if (shopper == null) {
+        throw new ServiceException(500, "您还未登录");
+      }
+      stringRedisTemplate.opsForHash().delete(ConstantValue.CART + shopper.getId(),
+          String.valueOf(productId));
+      return ResponseEntity.success(true);
+    } catch (SystemException e) {
+      logger.error("mycart", e);
+      return ResponseEntity.error(e.getErrorMessage(), e);
+    } catch (Exception e) {
+      logger.error("cart", e);
+      return ResponseEntity.error("未知异常", e);
+    }
   }
 }

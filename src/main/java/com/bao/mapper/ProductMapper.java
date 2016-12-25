@@ -1,7 +1,10 @@
 package com.bao.mapper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +68,12 @@ public class ProductMapper {
     return this.sqlSessionTemplate.selectList("com.bao.model.Product.findAll");
   }
 
+  public List<Product> selectByIds(Set<Object> keys) {
+    List<Long> ids = new ArrayList<>();
+    keys.forEach(k -> ids.add(Long.parseLong(String.valueOf(k))));
+    Map<String, List<Long>> map = new HashMap<>();
+    map.put("ids", ids);
+    return this.sqlSessionTemplate.selectList("com.bao.model.Product.selectByIds", map);
+  }
 
 }

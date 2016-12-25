@@ -57,7 +57,7 @@ public class ShopperManagerController {
 				stringRedisTemplate.opsForValue().set(ConstantValue.USER_TOKEN + uuid, String.valueOf(shopper.getId()),
 						12, TimeUnit.HOURS);
 				loginResponse.setToken(uuid);
-				loginResponse.setLoginName(loginName);
+				loginResponse.setLoginName(shopper.getName());
 
 			} else {
 				return ResponseEntity.error("用户名或密码错误", null);
