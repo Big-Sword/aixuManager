@@ -23,6 +23,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,44 +47,50 @@ public class OrderDao {
   private ProductMapper productMapper;
 
   @Transactional(propagation = Propagation.REQUIRED)
-  public void updateOrder(OrderUpdateRequest request, Long orderId) {
+  public void updateOrder(OrderUpdateRequest request, Long orderId) throws ParseException {
     if (orderId == null) throw new SystemException(500, "orderId不能为空");
     Orders orders = orderMapper.selectByPrimaryKey(orderId);
     if (orders == null) throw new SystemException(500, "找不到该订单");
 
-    if (orders.getStatus() != 0 && orders.getStatus() != 1) throw new SystemException(500, "订单状态不能修改");
+    if (orders.getStatus() != 0 && orders.getStatus() != 1)
+      throw new SystemException(500, "订单状态不能修改");
+
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+
 
     if (StringUtils.isNotBlank(request.getAddress())) orders.setAddress(request.getAddress());
     if (StringUtils.isNotBlank(request.getContact())) orders.setContact(request.getContact());
     if (StringUtils.isNotBlank(request.getCustomer())) orders.setCustomer(request.getCustomer());
-    if (! Objects.equals(request.getDeliveryTime(),0)) orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
-    if (! Objects.equals(request.getWeddingTime(),0)) orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
+    if (StringUtils.isNotBlank(request.getDeliveryTime())) orders.setDeliveryTime(
+        new Timestamp(simpleDateFormat.parse(request.getDeliveryTime()).getTime()));
+    if (StringUtils.isNotBlank(request.getWeddingTime())) orders
+        .setWeddingTime(new Timestamp(simpleDateFormat.parse(request.getWeddingTime()).getTime()));
 
     List<OrderDetailItem> requestDetailItems = request.getOrderDetailItems();
     OrderDetail orderDetail = new OrderDetail();
     orderDetail.setOrderId(orderId);
     List<OrderDetail> orderDetails = orderDetailMapper.selectBySelective(orderDetail);
-    //修改订单数量
-    for (OrderDetailItem detailItem : requestDetailItems){
+    // 修改订单数量
+    for (OrderDetailItem detailItem : requestDetailItems) {
       if (detailItem.getProductNum() <= 0 || detailItem.getProductNum() >= 9999)
         throw new SystemException(500, "商品件数不符合规则");
 
       boolean flag = false;
-      for (OrderDetail orderDetail1 : orderDetails){
-        if (Objects.equals(orderDetail1.getProductId(),detailItem.getProductId())){
+      for (OrderDetail orderDetail1 : orderDetails) {
+        if (Objects.equals(orderDetail1.getProductId(), detailItem.getProductId())) {
           orderDetail1.setProductCount(detailItem.getProductNum());
           orderDetailMapper.updateByPrimaryKeySelective(orderDetail1);
           flag = true;
         }
       }
-      if (! flag) throw new SystemException(500, "该订单不存在该商品,不能修改商品数量");
+      if (!flag) throw new SystemException(500, "该订单不存在该商品,不能修改商品数量");
     }
-    //重新计算价格
+    // 重新计算价格
     BigDecimal orderPrice = BigDecimal.ZERO;
     List<OrderDetail> orderDetailsAfter = orderDetailMapper.selectBySelective(orderDetail);
-    for (OrderDetail orderDetail2 : orderDetailsAfter){
-      orderPrice = orderPrice
-              .add(orderDetail2.getPrice().multiply(BigDecimal.valueOf(orderDetail2.getProductCount())));
+    for (OrderDetail orderDetail2 : orderDetailsAfter) {
+      orderPrice = orderPrice.add(
+          orderDetail2.getPrice().multiply(BigDecimal.valueOf(orderDetail2.getProductCount())));
     }
     orders.setOrderPrice(orderPrice);
     orders.setStatus(0);
@@ -90,7 +98,7 @@ public class OrderDao {
   }
 
   @Transactional(propagation = Propagation.REQUIRED)
-  public long makeOrder(OrderingRequest request,String loginId) {
+  public long makeOrder(OrderingRequest request, String loginId) {
     // get userId from somewhere
     long userId = NumberUtils.toLong(loginId);
     Shopper shopper = shopperMapper.selectByPrimaryKey(userId);
@@ -146,7 +154,7 @@ public class OrderDao {
     }
     Orders forUpdate = new Orders();
     forUpdate.setId(orders.getId());
-    forUpdate.setStatus(-1); //-1预下单 0下单成功待确定
+    forUpdate.setStatus(-1); // -1预下单 0下单成功待确定
     forUpdate.setOrderPrice(orderPrice);
     orderDetailMapper.batchInsert(orderDetails);
     orderMapper.updateByPrimaryKeySelective(forUpdate);

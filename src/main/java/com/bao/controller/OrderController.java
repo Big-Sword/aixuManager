@@ -126,15 +126,32 @@ public class OrderController {
 
   // 预下单 下单
   @RequestMapping(value = "/ordercheck/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> ordercheck(@PathVariable("id") Long orderId) {
+  public ResponseEntity<?> ordercheck(@PathVariable("id") Long orderId,
+      HttpServletRequest request) {
     try {
       if (orderId == null) throw new SystemException(500, "orderId不能为空");
       Orders orders = orderMapper.selectByPrimaryKey(orderId);
       if (orders == null) throw new SystemException(500, "找不到该订单");
 
       if (orders.getStatus() != -1) throw new SystemException(500, "订单状态不能确认");
+
+      String loginId = (String) request.getAttribute("loginId");
+
+      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+
+      if (shopper == null) {
+        throw new ServiceException(500, "您还未登录");
+      }
       orders.setStatus(0);
       orderMapper.updateByPrimaryKeySelective(orders);
+      // 删除购物车
+      OrderDetail record = new OrderDetail();
+      record.setOrderId(orders.getId());
+      List<OrderDetail> orderDetails = orderDetailMapper.selectBySelective(record);
+      for (OrderDetail orderDetail : orderDetails) {
+        stringRedisTemplate.opsForHash().delete(ConstantValue.CART + shopper.getId(),
+            String.valueOf(orderDetail.getProductId()));
+      }
       return ResponseEntity.success(true);
     } catch (SystemException e) {
       logger.error("order ordercheck", e);

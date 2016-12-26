@@ -8,27 +8,28 @@ import java.util.List;
  */
 public class OrderUpdateRequest {
 
-    private long deliveryTime;//送货时间
-    private long weddingTime;//婚礼时间
+    private String deliveryTime;//送货时间
+    private String weddingTime;//婚礼时间
     private String customer;//收货人
     private String contact;//联系方式
     private String address;//地址
     private List<OrderDetailItem> orderDetailItems = new ArrayList<>();//商品
 
-    public long getDeliveryTime() {
-        return deliveryTime;
+
+    public String getDeliveryTime() {
+      return deliveryTime;
     }
 
-    public void setDeliveryTime(long deliveryTime) {
-        this.deliveryTime = deliveryTime;
+    public void setDeliveryTime(String deliveryTime) {
+      this.deliveryTime = deliveryTime;
     }
 
-    public long getWeddingTime() {
-        return weddingTime;
+    public String getWeddingTime() {
+      return weddingTime;
     }
 
-    public void setWeddingTime(long weddingTime) {
-        this.weddingTime = weddingTime;
+    public void setWeddingTime(String weddingTime) {
+      this.weddingTime = weddingTime;
     }
 
     public List<OrderDetailItem> getOrderDetailItems() {
