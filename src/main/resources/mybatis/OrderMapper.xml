@@ -97,9 +97,7 @@
 			<if test="isDelete != null">
 				is_delete,
 			</if>
-			<if test="updatedAt != null">
-				updated_at,
-			</if>
+			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -141,9 +139,7 @@
 			<if test="isDelete != null">
 				#{isDelete,jdbcType=TINYINT},
 			</if>
-			<if test="updatedAt != null">
-				#{updatedAt,jdbcType=TIMESTAMP},
-			</if>
+		
 		</trim>
 	</insert>
 	<update id="updateByPrimaryKeySelective" parameterType="com.bao.model.Orders">
@@ -185,9 +181,6 @@
 			<if test="isDelete != null">
 				is_delete = #{isDelete,jdbcType=TINYINT},
 			</if>
-			<if test="updatedAt != null">
-				updated_at = #{updatedAt,jdbcType=TIMESTAMP},
-			</if>
 		</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
@@ -209,9 +202,7 @@
 		wedding_time = #{weddingTime},
 		order_time = #{orderTime},
 		is_delete =
-		#{isDelete,jdbcType=TINYINT},
-		updated_at =
-		#{updatedAt,jdbcType=TIMESTAMP}
+		#{isDelete,jdbcType=TINYINT}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
 
