@@ -76,4 +76,12 @@ public class ProductMapper {
     return this.sqlSessionTemplate.selectList("com.bao.model.Product.selectByIds", map);
   }
 
+  public List<Product> selectBySetIds(Set<Long> keys) {
+    List<Long> ids = new ArrayList<>();
+    keys.forEach(k -> ids.add(k));
+    Map<String, List<Long>> map = new HashMap<>();
+    map.put("ids", ids);
+    return this.sqlSessionTemplate.selectList("com.bao.model.Product.selectByIds", map);
+  }
+
 }

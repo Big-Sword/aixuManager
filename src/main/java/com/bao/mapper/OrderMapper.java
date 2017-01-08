@@ -59,6 +59,10 @@ public class OrderMapper {
     return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.countBySelective", param);
   }
 
+  public List<Orders> getBySelective(Orders record) {
+    return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderMapper.getBySelective", record);
+  }
+
   public long count() {
     return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.count");
   }

@@ -329,6 +329,49 @@
 		</if>
 	</select>
 
+	<select id="getBySelective" parameterType="com.bao.model.Orders" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from
+		orders where is_delete = 0
+		<if test="id != null">
+			and id = #{id}
+		</if>
+		<if test="orderNum != null">
+			and order_num = #{orderNum}
+		</if>
+		<if test="shopperId != null">
+			and shopper_id = #{shopperId}
+		</if>
+		<if test="shopperName != null">
+			and shopper_name = #{shopperName}
+		</if>
+		<if test="orderPrice != null">
+			and order_price = #{orderPrice}
+		</if>
+		<if test="customer != null">
+			and customer = #{customer}
+		</if>
+		<if test="contact != null">
+			and contact = #{contact}
+		</if>
+		<if test="address != null">
+			and address = #{address}
+		</if>
+		<if test="status != null">
+			and status = #{status}
+		</if>
+		<if test="deliveryTime != null">
+			and delivery_time = #{deliveryTime}
+		</if>
+		<if test="weddingTime != null">
+			and wedding_time = #{weddingTime}
+		</if>
+		<if test="orderTime != null">
+			and order_time = #{orderTime}
+		</if>
+	</select>
+
 	<select id="count" resultType="java.lang.Long">
 		select count(1) from
 		orders where

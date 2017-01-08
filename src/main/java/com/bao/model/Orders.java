@@ -18,7 +18,7 @@ public class Orders {
 	private String customer;//收货人
 	private String contact;//联系方式
 	private String address;//地址
-	private Integer status;//订单状态 -1预下单 0待确认 1已确认 2已送货 3已完成 4已取消
+	private Integer status;//订单状态 -1预下单 0待确认 1已确认 2已送货 3已完成 4已取消 5结清
 	private Timestamp deliveryTime;//送货时间
 	private Timestamp weddingTime;//婚礼时间
 	private Timestamp orderTime;//下单时间
