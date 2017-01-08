@@ -461,7 +461,7 @@ post
 
 
 
-##2.4订单付款信息
+##2.4查询订单付款信息
 ## http://localhost:8080/order/getPaymentInfoByOrderId/73
 x-token
 
