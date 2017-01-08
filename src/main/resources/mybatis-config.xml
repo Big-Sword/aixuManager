@@ -15,5 +15,6 @@
 		<mapper resource="mybatis/Shopper.xml" />
 		<mapper resource="mybatis/OrderMapper.xml" />
 		<mapper resource="mybatis/OrderDetailMapper.xml" />
+		<mapper resource="mybatis/OrderPaymentInfoMapper.xml"/>
 	</mappers>
 </configuration>
