@@ -435,5 +435,67 @@ get
 }
 
 ```  
+##2.3订单付款
+## http://localhost:8080/order/addPaymentInfo
 
-  
+x-token
+
+   | 名称                 | 描述           | 类型           | 备注                                       | 必需   
+| ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
+| orderId            | 订单ID         | int       |                                          | Y|
+| advance          |    预付款    | int      |                                          | Y   |
+| arrearage        | 未付款      | int         |                                          | Y
+| accountPaid        | 已付款      | int         |                                          | Y
+| modelPayment        | 付款方式      | int         |   1:现金 2：银行转账 3:支付宝 4:POS机                                       | Y
+
+``` 
+post
+``` 
+``` 
+{
+  "code": 200,
+  "msg": "success",
+  "data": true
+}
+``` 
+
+
+
+##2.4查询订单付款信息
+## http://localhost:8080/order/getPaymentInfoByOrderId/73
+x-token
+
+``` 
+get
+``` 
+``` 
+
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    {
+      "id": 1,
+      "orderId": 73,
+      "advance": 333,
+      "arrearage": 444,
+      "accountPaid": 333,
+      "modelPayment": 1,
+      "createdAt": 1483869145000,
+      "updatedAt": 1483869145000,
+      "isDelete": 0
+    },
+    {
+      "id": 2,
+      "orderId": 73,
+      "advance": 333,
+      "arrearage": 444,
+      "accountPaid": 333,
+      "modelPayment": 1,
+      "createdAt": 1483870066000,
+      "updatedAt": 1483870066000,
+      "isDelete": 0
+    }
+  ]
+}
+``` 

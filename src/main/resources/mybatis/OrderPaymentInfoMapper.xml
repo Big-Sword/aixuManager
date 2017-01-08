@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bao.model.OrderPaymentInfo">
+	<resultMap id="BaseResultMap" type="com.bao.model.OrderPaymentInfo">
+		<id column="id" property="id" />
+		<result column="order_id" property="orderId" />
+		<result column="advance" property="advance" />
+		<result column="arrearage" property="arrearage" />
+		<result column="account_paid" property="accountPaid" />
+		<result column="model_payment" property="modelPayment" />
+		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
+		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
+		<result column="is_delete" property="isDelete" />
+
+	</resultMap>
+	<sql id="Base_Column_List">
+		id,order_id,advance,arrearage,account_paid,model_payment,updated_at,created_at,is_delete
+	</sql>
+
+	<select id="getPaymentInfoByOrderId" resultMap="BaseResultMap" >
+		select
+		<include refid="Base_Column_List" />
+		from order_payment_info where order_id = #{orderId} and is_delete = 0
+	</select>
+
+	<insert id="insertPaymentInfo" parameterType="com.bao.model.OrderPaymentInfo"
+		useGeneratedKeys="true" keyProperty="id">
+		insert into order_payment_info (
+		<include refid="Base_Column_List" />
+		)values(null,#{orderId},#{advance},#{arrearage},#{accountPaid},#{modelPayment},null,null,0)
+	</insert>
+	
+	<select id="unfinishedPayment">
+	    select max(id) from order_payment_info where arrearage = 0 group by order_id
+	</select>
+	
+	
+
+</mapper>
