@@ -442,11 +442,10 @@ x-token
 
    | 名称                 | 描述           | 类型           | 备注                                       | 必需   
 | ------------------ | ------------ | ------------ | ---------------------------------------- | ---- |
-| orderId            | 订单ID         | int       |                                          | Y|
-| advance          |    预付款    | int      |                                          | Y   |
-| arrearage        | 未付款      | int         |                                          | Y
-| accountPaid        | 已付款      | int         |                                          | Y
+| orderId            | 订单ID         | double       |                                          | Y|
+| payment          |    付款    | double      |                                          | Y   |
 | modelPayment        | 付款方式      | int         |   1:现金 2：银行转账 3:支付宝 4:POS机                                       | Y
+| remark     | 备注  |strig |    |Y|
 
 ``` 
 post
@@ -475,27 +474,28 @@ get
   "msg": "success",
   "data": [
     {
-      "id": 1,
+       "id": 3,
       "orderId": 73,
-      "advance": 333,
-      "arrearage": 444,
-      "accountPaid": 333,
+      "payment": 20,
+      "accountPaid": 20,
+      "accountTotal": 1144,
       "modelPayment": 1,
-      "createdAt": 1483869145000,
-      "updatedAt": 1483869145000,
+      "remark": "预付款20",
+      "createdAt": 1483970194000,
+      "updatedAt": 1483970194000,
       "isDelete": 0
     },
     {
-      "id": 2,
+      "id": 3,
       "orderId": 73,
-      "advance": 333,
-      "arrearage": 444,
-      "accountPaid": 333,
+      "payment": 20,
+      "accountPaid": 40,
+      "accountTotal": 1144,
       "modelPayment": 1,
-      "createdAt": 1483870066000,
-      "updatedAt": 1483870066000,
-      "isDelete": 0
-    }
+      "remark": "预付款20",
+      "createdAt": 1483970194000,
+      "updatedAt": 1483970194000,
+      "isDelete": 0    }
   ]
 }
 ``` 

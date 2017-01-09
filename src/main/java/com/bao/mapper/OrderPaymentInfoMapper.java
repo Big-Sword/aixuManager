@@ -25,5 +25,9 @@ public class OrderPaymentInfoMapper {
 	public void insertPaymentInfo(OrderPaymentInfo orderPaymentInfo) {
 		this.sqlSessionTemplate.insert("com.bao.model.OrderPaymentInfo.insertPaymentInfo", orderPaymentInfo);
 	}
+	
+	public OrderPaymentInfo getLastPatmentInfo(long orderId) {
+		return this.sqlSessionTemplate.selectOne("com.bao.model.OrderPaymentInfo.getLastPatmentInfo", orderId);
+	}
 
 }

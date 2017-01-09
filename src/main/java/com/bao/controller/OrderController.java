@@ -92,65 +92,70 @@ public class OrderController {
 		}
 	}
 
-  // 2 修改 只能修改购买数量 修改完状态变成 未确认 已确认和未确认 都能修改购买数量
-  @RequestMapping(value = "/orderupdate/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> orderupdate(@PathVariable("id") Long orderId,
-                                       @RequestBody OrderUpdateRequest request,HttpServletRequest httpRequest) {
-    try {
-      String loginId = (String) httpRequest.getAttribute("loginId");
-      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
-      if (shopper == null) {
-        throw new ServiceException(500, "您还未登录");
-      }
-      Orders orders = new Orders();
-      orders.setShopperId(shopper.getId());
-      orders.setId(orderId);
-      List<Orders> myorders = orderMapper.getBySelective(orders);
-      if (myorders.size() == 0) throw new ServiceException(500, "您只能修改自己的订单");
+	// 2 修改 只能修改购买数量 修改完状态变成 未确认 已确认和未确认 都能修改购买数量
+	@RequestMapping(value = "/orderupdate/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> orderupdate(@PathVariable("id") Long orderId, @RequestBody OrderUpdateRequest request,
+			HttpServletRequest httpRequest) {
+		try {
+			String loginId = (String) httpRequest.getAttribute("loginId");
+			Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+			if (shopper == null) {
+				throw new ServiceException(500, "您还未登录");
+			}
+			Orders orders = new Orders();
+			orders.setShopperId(shopper.getId());
+			orders.setId(orderId);
+			List<Orders> myorders = orderMapper.getBySelective(orders);
+			if (myorders.size() == 0)
+				throw new ServiceException(500, "您只能修改自己的订单");
 
-      orderDao.updateOrder(request, orderId);
+			orderDao.updateOrder(request, orderId);
 
-      return ResponseEntity.success(true);
-    } catch (SystemException e) {
-      logger.error("order orderupdate", e);
-      return ResponseEntity.error(e.getErrorMessage(), e);
-    } catch (Exception e) {
-      logger.error("order orderupdate", e);
-      return ResponseEntity.error("未知异常", e);
-    }
-  }
+			return ResponseEntity.success(true);
+		} catch (SystemException e) {
+			logger.error("order orderupdate", e);
+			return ResponseEntity.error(e.getErrorMessage(), e);
+		} catch (Exception e) {
+			logger.error("order orderupdate", e);
+			return ResponseEntity.error("未知异常", e);
+		}
+	}
 
-  // 取消订单 商家用
-  @RequestMapping(value = "/ordercancel/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> orderCancel(@PathVariable("id") Long orderId,HttpServletRequest httpRequest) {
-    try {
-      if (orderId == null) throw new SystemException(500, "orderId不能为空");
-      Orders orders1 = orderMapper.selectByPrimaryKey(orderId);
-      if (orders1 == null) throw new SystemException(500, "找不到该订单");
+	// 取消订单 商家用
+	@RequestMapping(value = "/ordercancel/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> orderCancel(@PathVariable("id") Long orderId, HttpServletRequest httpRequest) {
+		try {
+			if (orderId == null)
+				throw new SystemException(500, "orderId不能为空");
+			Orders orders1 = orderMapper.selectByPrimaryKey(orderId);
+			if (orders1 == null)
+				throw new SystemException(500, "找不到该订单");
 
-      String loginId = (String) httpRequest.getAttribute("loginId");
-      Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
-      if (shopper == null) {
-        throw new ServiceException(500, "您还未登录");
-      }
-      Orders orders = new Orders();
-      orders.setShopperId(shopper.getId());
-      orders.setId(orderId);
-      List<Orders> myorders = orderMapper.getBySelective(orders);
-      if (myorders.size() == 0) throw new ServiceException(500, "您只能取消自己的订单");
+			String loginId = (String) httpRequest.getAttribute("loginId");
+			Shopper shopper = shopperMapper.selectByPrimaryKey(Long.valueOf(loginId));
+			if (shopper == null) {
+				throw new ServiceException(500, "您还未登录");
+			}
+			Orders orders = new Orders();
+			orders.setShopperId(shopper.getId());
+			orders.setId(orderId);
+			List<Orders> myorders = orderMapper.getBySelective(orders);
+			if (myorders.size() == 0)
+				throw new ServiceException(500, "您只能取消自己的订单");
 
-      if (orders.getStatus() != 0) throw new SystemException(500, "订单状态不能取消");
-      orders.setStatus(4);
-      orderMapper.updateByPrimaryKeySelective(orders);
-      return ResponseEntity.success(true);
-    } catch (SystemException e) {
-      logger.error("order ordercancel", e);
-      return ResponseEntity.error(e.getErrorMessage(), e);
-    } catch (Exception e) {
-      logger.error("order ordercancel", e);
-      return ResponseEntity.error("未知异常", e);
-    }
-  }
+			if (orders.getStatus() != 0)
+				throw new SystemException(500, "订单状态不能取消");
+			orders.setStatus(4);
+			orderMapper.updateByPrimaryKeySelective(orders);
+			return ResponseEntity.success(true);
+		} catch (SystemException e) {
+			logger.error("order ordercancel", e);
+			return ResponseEntity.error(e.getErrorMessage(), e);
+		} catch (Exception e) {
+			logger.error("order ordercancel", e);
+			return ResponseEntity.error("未知异常", e);
+		}
+	}
 
 	// 预下单 下单
 	@RequestMapping(value = "/ordercheck/{id}", method = RequestMethod.POST)
@@ -399,48 +404,53 @@ public class OrderController {
 		}
 	}
 
+	// 5结清 只有已完成的才能结清
+	@RequestMapping(value = "/ordersettleup/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> ordersettleup(@PathVariable("id") Long orderId) {
+		try {
+			if (orderId == null)
+				throw new SystemException(500, "orderId不能为空");
+			Orders orders = orderMapper.selectByPrimaryKey(orderId);
+			if (orders == null)
+				throw new SystemException(500, "找不到该订单");
 
-  // 5结清 只有已完成的才能结清
-  @RequestMapping(value = "/ordersettleup/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> ordersettleup(@PathVariable("id") Long orderId) {
-    try {
-      if (orderId == null) throw new SystemException(500, "orderId不能为空");
-      Orders orders = orderMapper.selectByPrimaryKey(orderId);
-      if (orders == null) throw new SystemException(500, "找不到该订单");
+			if (orders.getStatus() != 3)
+				throw new SystemException(500, "订单状态不能结清");
+			orders.setStatus(5);
+			orderMapper.updateByPrimaryKeySelective(orders);
+			return ResponseEntity.success(true);
+		} catch (SystemException e) {
+			logger.error("order ordersettleup", e);
+			return ResponseEntity.error(e.getErrorMessage(), e);
+		} catch (Exception e) {
+			logger.error("order ordersettleup", e);
+			return ResponseEntity.error("未知异常", e);
+		}
+	}
 
-      if (orders.getStatus() != 3) throw new SystemException(500, "订单状态不能结清");
-      orders.setStatus(5);
-      orderMapper.updateByPrimaryKeySelective(orders);
-      return ResponseEntity.success(true);
-    } catch (SystemException e) {
-      logger.error("order ordersettleup", e);
-      return ResponseEntity.error(e.getErrorMessage(), e);
-    } catch (Exception e) {
-      logger.error("order ordersettleup", e);
-      return ResponseEntity.error("未知异常", e);
-    }
-  }
+	// 取消订单 后台用
+	@RequestMapping(value = "/manageordercancel/{id}", method = RequestMethod.POST)
+	public ResponseEntity<?> manageordercancel(@PathVariable("id") Long orderId, HttpServletRequest httpRequest) {
+		try {
+			if (orderId == null)
+				throw new SystemException(500, "orderId不能为空");
+			Orders orders = orderMapper.selectByPrimaryKey(orderId);
+			if (orders == null)
+				throw new SystemException(500, "找不到该订单");
 
-  // 取消订单 后台用
-  @RequestMapping(value = "/manageordercancel/{id}", method = RequestMethod.POST)
-  public ResponseEntity<?> manageordercancel(@PathVariable("id") Long orderId,HttpServletRequest httpRequest) {
-    try {
-      if (orderId == null) throw new SystemException(500, "orderId不能为空");
-      Orders orders = orderMapper.selectByPrimaryKey(orderId);
-      if (orders == null) throw new SystemException(500, "找不到该订单");
-
-      if (orders.getStatus() != 0 && orders.getStatus() != 1) throw new SystemException(500, "订单状态不能取消");
-      orders.setStatus(4);
-      orderMapper.updateByPrimaryKeySelective(orders);
-      return ResponseEntity.success(true);
-    } catch (SystemException e) {
-      logger.error("order ordercancel", e);
-      return ResponseEntity.error(e.getErrorMessage(), e);
-    } catch (Exception e) {
-      logger.error("order ordercancel", e);
-      return ResponseEntity.error("未知异常", e);
-    }
-  }
+			if (orders.getStatus() != 0 && orders.getStatus() != 1)
+				throw new SystemException(500, "订单状态不能取消");
+			orders.setStatus(4);
+			orderMapper.updateByPrimaryKeySelective(orders);
+			return ResponseEntity.success(true);
+		} catch (SystemException e) {
+			logger.error("order ordercancel", e);
+			return ResponseEntity.error(e.getErrorMessage(), e);
+		} catch (Exception e) {
+			logger.error("order ordercancel", e);
+			return ResponseEntity.error("未知异常", e);
+		}
+	}
 
 	private DataTableReqInfo reciveAoData(String aoData) throws Exception {
 		JSONArray jsonArray = new JSONArray(URLDecoder.decode(aoData, "utf8").replaceAll("aoData=", ""));
@@ -568,21 +578,27 @@ public class OrderController {
 	@RequestMapping(value = "/addPaymentInfo", method = RequestMethod.POST)
 	public ResponseEntity<?> paymentInfo(@RequestBody OrderPaymentInfo orderPaymentInfo) {
 		try {
-			Orders order = orderMapper.selectByPrimaryKey(orderPaymentInfo.getOrderId());
-			if (order == null) {
-				return ResponseEntity.error("该订单不存在", null);
-			}
-			if (orderPaymentInfo.getAdvance() == null) {
-				return ResponseEntity.error("预付款不能为空", null);
-			}
-			if (orderPaymentInfo.getAccountPaid() == null) {
-				return ResponseEntity.error("已付款不能为空", null);
-			}
-			if (orderPaymentInfo.getArrearage() == null) {
-				return ResponseEntity.error("未付款不能为空", null);
-			}
 			if (orderPaymentInfo.getModelPayment() == null) {
 				return ResponseEntity.error("付款方式不能为空", null);
+			}
+			if (orderPaymentInfo.getPayment() == null) {
+				return ResponseEntity.error("付款不能为空", null);
+			}
+			OrderPaymentInfo lastPatmentInfo = orderPatmentInfoMapper.getLastPatmentInfo(orderPaymentInfo.getOrderId());
+			if (lastPatmentInfo == null) {// 表里还没有付款信息所以需要查订单的总金额
+				Orders order = orderMapper.selectByPrimaryKey(orderPaymentInfo.getOrderId());
+				if (order == null) {
+					return ResponseEntity.error("该订单不存在", null);
+				}
+				orderPaymentInfo.setAccountTotal(order.getOrderPrice());
+				orderPaymentInfo.setAccountPaid(orderPaymentInfo.getPayment());
+
+			} else {
+				orderPaymentInfo.setAccountTotal(lastPatmentInfo.getAccountTotal());
+				orderPaymentInfo.setAccountPaid(lastPatmentInfo.getAccountPaid().add(orderPaymentInfo.getPayment()));
+			}
+			if (orderPaymentInfo.getAccountPaid().subtract(orderPaymentInfo.getAccountTotal()).doubleValue() > 0) {
+				return ResponseEntity.error("已付款不能超过总金额", null);
 			}
 			orderPatmentInfoMapper.insertPaymentInfo(orderPaymentInfo);
 			return ResponseEntity.success(true);
@@ -613,6 +629,5 @@ public class OrderController {
 		}
 
 	}
-	
 
 }

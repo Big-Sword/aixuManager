@@ -4,20 +4,21 @@
 	<resultMap id="BaseResultMap" type="com.bao.model.OrderPaymentInfo">
 		<id column="id" property="id" />
 		<result column="order_id" property="orderId" />
-		<result column="advance" property="advance" />
-		<result column="arrearage" property="arrearage" />
+		<result column="payment" property="payment" />
 		<result column="account_paid" property="accountPaid" />
+		<result column="account_total" property="accountTotal" />
 		<result column="model_payment" property="modelPayment" />
 		<result column="updated_at" property="updatedAt" javaType="java.sql.Timestamp" />
 		<result column="created_at" property="createdAt" javaType="java.sql.Timestamp" />
+		<result column="remark" property="remark" />
 		<result column="is_delete" property="isDelete" />
 
 	</resultMap>
 	<sql id="Base_Column_List">
-		id,order_id,advance,arrearage,account_paid,model_payment,updated_at,created_at,is_delete
+		id,order_id,payment,account_paid,account_total,model_payment,remark,updated_at,created_at,is_delete
 	</sql>
 
-	<select id="getPaymentInfoByOrderId" resultMap="BaseResultMap" >
+	<select id="getPaymentInfoByOrderId" resultMap="BaseResultMap">
 		select
 		<include refid="Base_Column_List" />
 		from order_payment_info where order_id = #{orderId} and is_delete = 0
@@ -27,13 +28,17 @@
 		useGeneratedKeys="true" keyProperty="id">
 		insert into order_payment_info (
 		<include refid="Base_Column_List" />
-		)values(null,#{orderId},#{advance},#{arrearage},#{accountPaid},#{modelPayment},null,null,0)
+		)values(null,#{orderId},#{payment},#{accountPaid},#{accountTotal},#{modelPayment},#{remark},null,null,0)
 	</insert>
-	
-	<select id="unfinishedPayment">
-	    select max(id) from order_payment_info where arrearage = 0 group by order_id
+
+	<select id="getLastPatmentInfo" resultMap="BaseResultMap">
+		select
+		<include refid="Base_Column_List" />
+		from order_payment_info
+		where id = (select max(id) from order_payment_info where order_id
+		=#{orderId} and is_delete = 0)
 	</select>
-	
-	
+
+
 
 </mapper>

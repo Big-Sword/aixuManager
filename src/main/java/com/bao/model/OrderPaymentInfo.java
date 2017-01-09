@@ -12,13 +12,15 @@ public class OrderPaymentInfo {
 
 	private long orderId;
 
-	private BigDecimal advance;
-
-	private BigDecimal arrearage;
+	private BigDecimal payment;
 
 	private BigDecimal accountPaid;
 
+	private BigDecimal accountTotal;
+
 	private Integer modelPayment;
+
+	private String remark = "";
 
 	private Timestamp createdAt;
 
@@ -40,30 +42,6 @@ public class OrderPaymentInfo {
 
 	public void setOrderId(long orderId) {
 		this.orderId = orderId;
-	}
-
-	public BigDecimal getAdvance() {
-		return advance;
-	}
-
-	public void setAdvance(BigDecimal advance) {
-		this.advance = advance;
-	}
-
-	public BigDecimal getArrearage() {
-		return arrearage;
-	}
-
-	public void setArrearage(BigDecimal arrearage) {
-		this.arrearage = arrearage;
-	}
-
-	public BigDecimal getAccountPaid() {
-		return accountPaid;
-	}
-
-	public void setAccountPaid(BigDecimal accountPaid) {
-		this.accountPaid = accountPaid;
 	}
 
 	public Timestamp getCreatedAt() {
@@ -96,6 +74,38 @@ public class OrderPaymentInfo {
 
 	public void setModelPayment(Integer modelPayment) {
 		this.modelPayment = modelPayment;
+	}
+
+	public BigDecimal getPayment() {
+		return payment;
+	}
+
+	public void setPayment(BigDecimal payment) {
+		this.payment = payment;
+	}
+
+	public BigDecimal getAccountPaid() {
+		return accountPaid;
+	}
+
+	public void setAccountPaid(BigDecimal accountPaid) {
+		this.accountPaid = accountPaid;
+	}
+
+	public BigDecimal getAccountTotal() {
+		return accountTotal;
+	}
+
+	public void setAccountTotal(BigDecimal accountTotal) {
+		this.accountTotal = accountTotal;
+	}
+
+	public String getRemark() {
+		return remark;
+	}
+
+	public void setRemark(String remark) {
+		this.remark = remark;
 	}
 
 }
