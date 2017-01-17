@@ -62,6 +62,13 @@
 		where is_delete = 0 and id = #{id}
 	</select>
 
+	<select id="searchByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from product
+		where is_delete = 0 and name LIKE concat('%',#{name},'%')
+	</select>
+
 	<insert id="createProduct" parameterType="com.bao.model.Product"
 		useGeneratedKeys="true" keyProperty="id">
 		insert into product(

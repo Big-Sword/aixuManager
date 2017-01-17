@@ -7,7 +7,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -47,4 +48,18 @@ public class OrderDetailMapper {
         return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderDetailMapper.selectBySelective",record);
     }
 
+    public List<OrderDetail> selectByIds(OrderDetail record){
+        return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderDetailMapper.selectBySelective",record);
+    }
+
+
+    public List<OrderDetail> selectByProductIds(Set<Long> keys, Timestamp start, Timestamp end) {
+        List<Long> ids = new ArrayList<>();
+        keys.forEach(k -> ids.add(k));
+        Map<String, Object> map = new HashMap<>();
+        map.put("ids", ids);
+        map.put("start", start);
+        map.put("end", end);
+        return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderDetailMapper.selectByProductIds", map);
+    }
 }

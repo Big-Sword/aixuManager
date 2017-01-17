@@ -1,5 +1,6 @@
 package com.bao.mapper;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +50,10 @@ public class ProductMapper {
 
   public Product selectById(long id) {
     return this.sqlSessionTemplate.selectOne("com.bao.model.Product.selectById", id);
+  }
+
+  public List<Product> searchByName(String name) {
+    return this.sqlSessionTemplate.selectList("com.bao.model.Product.searchByName", name);
   }
 
   public int countAllProducts(DataTableReqInfo dataTableReqInfo) {

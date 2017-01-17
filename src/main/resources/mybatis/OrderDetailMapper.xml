@@ -246,4 +246,22 @@
       and colour_type = #{colourType}
     </if>
   </select>
+
+  <select id="selectByProductIds" resultMap="BaseResultMap"
+          parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from order_detail
+    where is_delete = 0 and product_id in (
+    <foreach collection="ids" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+    <if test="start != null">
+      and updated_at &gt; #{start}
+    </if>
+    <if test="end != null">
+      and updated_at &lt; #{end}
+    </if>
+  </select>
 </mapper>

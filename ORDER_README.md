@@ -407,20 +407,23 @@ orderdata/shopper/mine
   ]
 }
 ```
-## 11.2 查看用户购买的商品 后台用
+
+## 12 查看商品 (单件商品的搜索)
 #### 描述
 *  
 
 #### WEB API 地址
 ```
 post
-orderdata/shopper/{id}
+orderdata/product/{name}
 ```
 
 #### 输入参数
 | 名称 | 类型  | 必填 | 传参位置 | 说明
 |-----|------|------|--------|--------|
-|id|long|y|url|订单号|
+| name |varchar|y|url|商品名称 模糊匹配|
+|startTime| varchar |n|json|开始时间 格式与之前一样yyyy/MM/dd HH:mm|
+|endTime| varchar |n|json|结束时间 格式与之前一样yyyy/MM/dd HH:mm|
 
 #### 返回参数
 ```
@@ -436,7 +439,7 @@ orderdata/shopper/{id}
       "price": 24.85,
       "modelType": "来来来",
       "colourType": "白色",
-      "num": 10         //购买次数
+      "num": 15        //购买次数
     },
     {
       "id": 2,
@@ -446,7 +449,7 @@ orderdata/shopper/{id}
       "price": 24.85,
       "modelType": "来来来",
       "colourType": "白色",
-      "num": 2        //购买次数
+      "num": 4
     }
   ]
 }
