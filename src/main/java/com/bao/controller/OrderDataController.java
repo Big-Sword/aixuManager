@@ -1,6 +1,7 @@
 package com.bao.controller;
 
 import com.bao.controller.msg.orderdata.ProductResponse;
+import com.bao.controller.msg.orderdata.ShopperProductResponse;
 import com.bao.controller.msg.orderdata.StartEndTimeRequest;
 import com.bao.framework.ResponseEntity;
 import com.bao.framework.exception.ServiceException;
@@ -130,6 +131,7 @@ public class OrderDataController {
                                    @RequestBody StartEndTimeRequest startEndTimeRequest) {
     try {
       if (StringUtils.isBlank(name)) throw new ServiceException(500, "用户名称不能为空");
+      List<ShopperProductResponse> response = new ArrayList<>();
 
       SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
       Timestamp start = startEndTimeRequest.getStartTime()==null ? null :
@@ -137,25 +139,42 @@ public class OrderDataController {
       Timestamp end = startEndTimeRequest.getEndTime()==null ? null :
               new Timestamp(simpleDateFormat.parse(startEndTimeRequest.getEndTime()).getTime());
 
-      List<Product> productList = productMapper.searchByName(name);
-      if (productList.size() == 0) return ResponseEntity.success(new ArrayList<>());
-      List<OrderDetail> orderDetailList = orderDetailMapper.selectByProductIds( productList.stream().map(n -> n.getId()).collect(Collectors.toSet()), start, end);
-      if (orderDetailList.size() == 0) return ResponseEntity.success(new ArrayList<>());
+      List<Shopper> shopperList = shopperMapper.searchByName(name);
+      if (shopperList.size() == 0) return ResponseEntity.success(response);
+      shopperList.forEach(shopper -> {
+        ShopperProductResponse shopperProductResponse = new ShopperProductResponse();
+        shopperProductResponse.setName(shopper.getName());
 
-      List<ProductResponse> responseList = BeanSwapUtils.swapList(productList, ProductResponse.class);
-      responseList.forEach(n->{
-        Integer count = orderDetailList.stream().filter(f -> f.getProductId() == n.getId())
-                .map(m -> m.getProductCount())
-                .reduce((sum, cost) -> sum + cost)
-                .get();
-        n.setNum(count);
+        List<Orders> ordersList = orderMapper.selectByShopperId(shopper.getId(), start, end);
+        if (ordersList.size() == 0) {
+          shopperProductResponse.setProductResponses(new ArrayList<>());
+        }else {
+          List<OrderDetail> orderDetailList = orderDetailMapper.selectByOrderIds(ordersList.stream().map(n -> n.getId()).collect(Collectors.toSet()));
+          if (orderDetailList.size() == 0){
+            shopperProductResponse.setProductResponses(new ArrayList<>());
+          }else {
+            List<Product> productList = productMapper.selectBySetIds(orderDetailList.stream().map(n -> n.getProductId()).collect(Collectors.toSet()));
+            List<ProductResponse> responseList = BeanSwapUtils.swapList(productList, ProductResponse.class);
+            responseList.forEach(n->{
+              Integer count = orderDetailList.stream().filter(f -> f.getProductId() == n.getId())
+                      .map(m -> m.getProductCount())
+                      .reduce((sum, cost) -> sum + cost)
+                      .get();
+              n.setNum(count);
+            });
+
+            shopperProductResponse.setProductResponses(responseList);
+          }
+        }
+        response.add(shopperProductResponse);
       });
-      return ResponseEntity.success(responseList);
+
+      return ResponseEntity.success(response);
     } catch (SystemException e) {
-      logger.error("orderdata product", e);
+      logger.error("orderdata shopper", e);
       return ResponseEntity.error(e.getErrorMessage(), e);
     } catch (Exception e) {
-      logger.error("orderdata product", e);
+      logger.error("orderdata shopper", e);
       return ResponseEntity.error("未知异常", e);
     }
   }

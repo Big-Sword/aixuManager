@@ -121,7 +121,12 @@
 		is_delete = 1 where id =#{id}
 	</update>
 
-
+	<select id="searchByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select
+		<include refid="Base_Column_List" />
+		from shopper
+		where is_delete = 0 and name LIKE concat('%',#{name},'%')
+	</select>
 
 
 </mapper>

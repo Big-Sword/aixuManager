@@ -16,13 +16,20 @@ public final class BeanSwapUtils {
   private BeanSwapUtils(){}
 
   public static <O, N> List<N> swapList(List<O> orginList, Class<N> newClass)
-      throws InstantiationException, IllegalAccessException {
+       {
     if (orginList==null || orginList.size()==0) {
       return Collections.emptyList();
     }
     List<N> newList = new ArrayList<>();
     for (O o : orginList) {
-      N n = newClass.newInstance();
+      N n = null;
+      try {
+        n = newClass.newInstance();
+      } catch (InstantiationException e) {
+        e.printStackTrace();
+      } catch (IllegalAccessException e) {
+        e.printStackTrace();
+      }
       BeanUtils.copyProperties(o, n);
       newList.add(n);
     }

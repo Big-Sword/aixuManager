@@ -264,4 +264,16 @@
       and updated_at &lt; #{end}
     </if>
   </select>
+
+  <select id="selectByOrderIds" resultMap="BaseResultMap"
+          parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from order_detail
+    where is_delete = 0 and order_id in (
+    <foreach collection="ids" item="id" separator=",">
+      #{id}
+    </foreach>
+    )
+  </select>
 </mapper>

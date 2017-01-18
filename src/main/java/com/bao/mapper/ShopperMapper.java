@@ -88,4 +88,7 @@ public class ShopperMapper {
     return this.sqlSessionTemplate.selectOne("com.bao.model.Shopper.count");
   }
 
+  public List<Shopper> searchByName(String name) {
+    return this.sqlSessionTemplate.selectList("com.bao.model.Shopper.searchByName", name);
+  }
 }

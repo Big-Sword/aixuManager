@@ -8,9 +8,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -65,5 +64,13 @@ public class OrderMapper {
 
   public long count() {
     return this.sqlSessionTemplate.selectOne("com.bao.mapper.OrderMapper.count");
+  }
+
+  public List<Orders> selectByShopperId(Long shopperId, Timestamp start, Timestamp end) {
+    Map<String, Object> map = new HashMap<>();
+    map.put("shopperId", shopperId);
+    map.put("start", start);
+    map.put("end", end);
+    return this.sqlSessionTemplate.selectList("com.bao.mapper.OrderMapper.selectByShopperId", map);
   }
 }

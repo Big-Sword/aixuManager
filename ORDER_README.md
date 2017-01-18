@@ -454,3 +454,58 @@ orderdata/product/{name}
   ]
 }
 ```
+## 13 查看商品 (用户名的搜索)
+#### 描述
+*  
+
+#### WEB API 地址
+```
+post
+orderdata/shopper/{name}
+```
+
+#### 输入参数
+| 名称 | 类型  | 必填 | 传参位置 | 说明
+|-----|------|------|--------|--------|
+| name |varchar|y|url|shopper name字段 模糊匹配|
+|startTime| varchar |n|json|开始时间 格式与之前一样yyyy/MM/dd HH:mm|
+|endTime| varchar |n|json|结束时间 格式与之前一样yyyy/MM/dd HH:mm|
+
+#### 返回参数
+```
+{
+  "code": 200,
+  "msg": "success",
+  "data": [
+    {
+      "name": "上海",
+      "productResponses": [
+        {
+          "id": 1,
+          "name": "真假",
+          "picUrl": "ef4e67f1-4a38-47e2-87bc-70485f846f95.png~ef4e67f1-4a38-47e2-87bc-70485f846f95.png",
+          "content": "大象",
+          "price": 24.85,
+          "modelType": "来来来",
+          "colourType": "白色",
+          "num": 3
+        },
+        {
+          "id": 15,
+          "name": "第三方",
+          "picUrl": "ef4e67f1-4a38-47e2-87bc-70485f846f95.png",
+          "content": "asd",
+          "price": 34,
+          "modelType": "sdf",
+          "colourType": "df",
+          "num": 27
+        }
+      ]
+    },
+    {
+      "name": "上上海rr",
+      "productResponses": []
+    }
+  ]
+}
+```

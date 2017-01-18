@@ -377,4 +377,19 @@
 		orders where
 		is_delete = 0 and status != -1
 	</select>
+
+	<select id="selectByShopperId" resultMap="BaseResultMap"
+			parameterType="java.util.List">
+		select
+		<include refid="Base_Column_List" />
+		from orders
+		where is_delete = 0 and shopper_id = #{shopperId}
+		<if test="start != null">
+			and updated_at &gt; #{start}
+		</if>
+		<if test="end != null">
+			and updated_at &lt; #{end}
+		</if>
+	</select>
+
 </mapper>
