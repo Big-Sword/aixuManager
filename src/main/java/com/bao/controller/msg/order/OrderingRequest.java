@@ -13,7 +13,25 @@ public class OrderingRequest {
     private String customer;//收货人
     private String contact;//联系方式
     private String address;//地址
+    private String invoice;//发票
+    private String remark;//备注
     private List<OrderDetailItem> orderDetailItems = new ArrayList<>();//商品
+
+    public String getInvoice() {
+      return invoice;
+    }
+
+    public void setInvoice(String invoice) {
+      this.invoice = invoice;
+    }
+
+    public String getRemark() {
+      return remark;
+    }
+
+    public void setRemark(String remark) {
+      this.remark = remark;
+    }
 
     public long getDeliveryTime() {
         return deliveryTime;

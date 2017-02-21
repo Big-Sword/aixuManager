@@ -10,80 +10,98 @@ import java.sql.Timestamp;
  */
 @Data
 public class Orders {
-	private Long id;
-	private String orderNum;//订单号
-	private Long shopperId;
-	private String shopperName;
-	private BigDecimal orderPrice;//订单总额
-	private String customer;//收货人
-	private String contact;//联系方式
-	private String address;//地址
-	private Integer status;//订单状态 -1预下单 0待确认 1已确认 2已送货 3已完成 4已取消 5结清
-	private Timestamp deliveryTime;//送货时间
-	private Timestamp weddingTime;//婚礼时间
-	private Timestamp orderTime;//下单时间
-	
-	private Timestamp deliveryTimeS;//送货时间
-    private Timestamp weddingTimeS;//婚礼时间
-    private Timestamp orderTimeS;//下单时间
-    private Timestamp deliveryTimeE;//送货时间
-    private Timestamp weddingTimeE;//婚礼时间
-    private Timestamp orderTimeE;//下单时间
+  private Long id;
+  private String orderNum;// 订单号
+  private Long shopperId;
+  private String shopperName;
+  private BigDecimal orderPrice;// 订单总额
+  private String customer;// 收货人
+  private String contact;// 联系方式
+  private String address;// 地址
+  private String invoice;// 发票
+  private String remark;// 备注
+  private Integer status;// 订单状态 -1预下单 0待确认 1已确认 2已送货 3已完成 4已取消 5结清
+  private Timestamp deliveryTime;// 送货时间
+  private Timestamp weddingTime;// 婚礼时间
+  private Timestamp orderTime;// 下单时间
 
-	public Timestamp getDeliveryTimeS() {
-      return deliveryTimeS;
-    }
+  private Timestamp deliveryTimeS;// 送货时间
+  private Timestamp weddingTimeS;// 婚礼时间
+  private Timestamp orderTimeS;// 下单时间
+  private Timestamp deliveryTimeE;// 送货时间
+  private Timestamp weddingTimeE;// 婚礼时间
+  private Timestamp orderTimeE;// 下单时间
 
-    public void setDeliveryTimeS(Timestamp deliveryTimeS) {
-      this.deliveryTimeS = deliveryTimeS;
-    }
+  public String getInvoice() {
+    return invoice;
+  }
 
-    public Timestamp getWeddingTimeS() {
-      return weddingTimeS;
-    }
+  public void setInvoice(String invoice) {
+    this.invoice = invoice;
+  }
 
-    public void setWeddingTimeS(Timestamp weddingTimeS) {
-      this.weddingTimeS = weddingTimeS;
-    }
+  public String getRemark() {
+    return remark;
+  }
 
-    public Timestamp getOrderTimeS() {
-      return orderTimeS;
-    }
+  public void setRemark(String remark) {
+    this.remark = remark;
+  }
 
-    public void setOrderTimeS(Timestamp orderTimeS) {
-      this.orderTimeS = orderTimeS;
-    }
+  public Timestamp getDeliveryTimeS() {
+    return deliveryTimeS;
+  }
 
-    public Timestamp getDeliveryTimeE() {
-      return deliveryTimeE;
-    }
+  public void setDeliveryTimeS(Timestamp deliveryTimeS) {
+    this.deliveryTimeS = deliveryTimeS;
+  }
 
-    public void setDeliveryTimeE(Timestamp deliveryTimeE) {
-      this.deliveryTimeE = deliveryTimeE;
-    }
+  public Timestamp getWeddingTimeS() {
+    return weddingTimeS;
+  }
 
-    public Timestamp getWeddingTimeE() {
-      return weddingTimeE;
-    }
+  public void setWeddingTimeS(Timestamp weddingTimeS) {
+    this.weddingTimeS = weddingTimeS;
+  }
 
-    public void setWeddingTimeE(Timestamp weddingTimeE) {
-      this.weddingTimeE = weddingTimeE;
-    }
+  public Timestamp getOrderTimeS() {
+    return orderTimeS;
+  }
 
-    public Timestamp getOrderTimeE() {
-      return orderTimeE;
-    }
+  public void setOrderTimeS(Timestamp orderTimeS) {
+    this.orderTimeS = orderTimeS;
+  }
 
-    public void setOrderTimeE(Timestamp orderTimeE) {
-      this.orderTimeE = orderTimeE;
-    }
+  public Timestamp getDeliveryTimeE() {
+    return deliveryTimeE;
+  }
+
+  public void setDeliveryTimeE(Timestamp deliveryTimeE) {
+    this.deliveryTimeE = deliveryTimeE;
+  }
+
+  public Timestamp getWeddingTimeE() {
+    return weddingTimeE;
+  }
+
+  public void setWeddingTimeE(Timestamp weddingTimeE) {
+    this.weddingTimeE = weddingTimeE;
+  }
+
+  public Timestamp getOrderTimeE() {
+    return orderTimeE;
+  }
+
+  public void setOrderTimeE(Timestamp orderTimeE) {
+    this.orderTimeE = orderTimeE;
+  }
 
   private int isDelete;
-	private Timestamp updatedAt;
-	
-	
+  private Timestamp updatedAt;
 
-	public String getShopperName() {
+
+
+  public String getShopperName() {
     return shopperName;
   }
 
@@ -92,125 +110,115 @@ public class Orders {
   }
 
   public Long getId() {
-		return id;
-	}
+    return id;
+  }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public String getOrderNum() {
-		return orderNum;
-	}
+  public String getOrderNum() {
+    return orderNum;
+  }
 
-	public void setOrderNum(String orderNum) {
-		this.orderNum = orderNum;
-	}
+  public void setOrderNum(String orderNum) {
+    this.orderNum = orderNum;
+  }
 
-	public Long getShopperId() {
-		return shopperId;
-	}
+  public Long getShopperId() {
+    return shopperId;
+  }
 
-	public void setShopperId(Long shopperId) {
-		this.shopperId = shopperId;
-	}
+  public void setShopperId(Long shopperId) {
+    this.shopperId = shopperId;
+  }
 
-	public BigDecimal getOrderPrice() {
-		return orderPrice;
-	}
+  public BigDecimal getOrderPrice() {
+    return orderPrice;
+  }
 
-	public void setOrderPrice(BigDecimal orderPrice) {
-		this.orderPrice = orderPrice;
-	}
+  public void setOrderPrice(BigDecimal orderPrice) {
+    this.orderPrice = orderPrice;
+  }
 
-	public String getCustomer() {
-		return customer;
-	}
+  public String getCustomer() {
+    return customer;
+  }
 
-	public void setCustomer(String customer) {
-		this.customer = customer;
-	}
+  public void setCustomer(String customer) {
+    this.customer = customer;
+  }
 
-	public String getContact() {
-		return contact;
-	}
+  public String getContact() {
+    return contact;
+  }
 
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
+  public void setContact(String contact) {
+    this.contact = contact;
+  }
 
-	public String getAddress() {
-		return address;
-	}
+  public String getAddress() {
+    return address;
+  }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
+  public void setAddress(String address) {
+    this.address = address;
+  }
 
-	public Integer getStatus() {
-		return status;
-	}
+  public Integer getStatus() {
+    return status;
+  }
 
-	public void setStatus(Integer status) {
-		this.status = status;
-	}
+  public void setStatus(Integer status) {
+    this.status = status;
+  }
 
-	public Timestamp getDeliveryTime() {
-		return deliveryTime;
-	}
+  public Timestamp getDeliveryTime() {
+    return deliveryTime;
+  }
 
-	public void setDeliveryTime(Timestamp deliveryTime) {
-		this.deliveryTime = deliveryTime;
-	}
+  public void setDeliveryTime(Timestamp deliveryTime) {
+    this.deliveryTime = deliveryTime;
+  }
 
-	public Timestamp getWeddingTime() {
-		return weddingTime;
-	}
+  public Timestamp getWeddingTime() {
+    return weddingTime;
+  }
 
-	public void setWeddingTime(Timestamp weddingTime) {
-		this.weddingTime = weddingTime;
-	}
+  public void setWeddingTime(Timestamp weddingTime) {
+    this.weddingTime = weddingTime;
+  }
 
-	public Timestamp getOrderTime() {
-		return orderTime;
-	}
+  public Timestamp getOrderTime() {
+    return orderTime;
+  }
 
-	public void setOrderTime(Timestamp orderTime) {
-		this.orderTime = orderTime;
-	}
+  public void setOrderTime(Timestamp orderTime) {
+    this.orderTime = orderTime;
+  }
 
-	public int getIsDelete() {
-		return isDelete;
-	}
+  public int getIsDelete() {
+    return isDelete;
+  }
 
-	public void setIsDelete(int isDelete) {
-		this.isDelete = isDelete;
-	}
+  public void setIsDelete(int isDelete) {
+    this.isDelete = isDelete;
+  }
 
-	public Timestamp getUpdatedAt() {
-		return updatedAt;
-	}
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
+  }
 
-	public void setUpdatedAt(Timestamp updatedAt) {
-		this.updatedAt = updatedAt;
-	}
+  public void setUpdatedAt(Timestamp updatedAt) {
+    this.updatedAt = updatedAt;
+  }
 
-	@Override
-	public String toString() {
-		return "Orders{" +
-				"id=" + id +
-				", orderNum='" + orderNum + '\'' +
-				", shopperId=" + shopperId +
-				", orderPrice=" + orderPrice +
-				", customer='" + customer + '\'' +
-				", contact='" + contact + '\'' +
-				", address='" + address + '\'' +
-				", status=" + status +
-				", deliveryTime=" + deliveryTime +
-				", weddingTime=" + weddingTime +
-				", orderTime=" + orderTime +
-				", isDelete=" + isDelete +
-				", updatedAt=" + updatedAt +
-				'}';
-	}
+  @Override
+  public String toString() {
+    return "Orders{" + "id=" + id + ", orderNum='" + orderNum + '\'' + ", shopperId=" + shopperId
+        + ", orderPrice=" + orderPrice + ", customer='" + customer + '\'' + ", contact='" + contact
+        + '\'' + ", address='" + address + '\'' + ", status=" + status + ", deliveryTime="
+        + deliveryTime + ", weddingTime=" + weddingTime + ", orderTime=" + orderTime + ", isDelete="
+        + isDelete + ", updatedAt=" + updatedAt + '}';
+  }
 }

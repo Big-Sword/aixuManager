@@ -10,6 +10,8 @@
 		<result column="customer" property="customer" jdbcType="CHAR" />
 		<result column="contact" property="contact" jdbcType="CHAR" />
 		<result column="address" property="address" jdbcType="CHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+		<result column="invoice" property="invoice" jdbcType="CHAR" />
 		<result column="status" property="status" jdbcType="TINYINT" />
 		<result column="delivery_time" property="deliveryTime" />
 		<result column="wedding_time" property="weddingTime" />
@@ -22,7 +24,7 @@
 		customer, contact, address,
 		status, delivery_time,
 		wedding_time,
-		order_time, is_delete, updated_at
+		order_time, is_delete, updated_at,remark,invoice
 	</sql>
 	<select id="selectByPrimaryKey" resultMap="BaseResultMap"
 		parameterType="java.lang.Long">
@@ -43,7 +45,7 @@
 		address,
 		status, delivery_time,
 		wedding_time, order_time, is_delete,
-		updated_at)
+		updated_at,remark,invoice)
 		values (#{id,jdbcType=BIGINT}, #{orderNum,jdbcType=CHAR},
 		#{shopperId,jdbcType=BIGINT},#{shopperName,jdbcType=CHAR},
 		#{orderPrice,jdbcType=DECIMAL}, #{customer,jdbcType=CHAR},
@@ -52,7 +54,7 @@
 		#{status,jdbcType=TINYINT}, #{deliveryTime},
 		#{weddingTime},
 		#{orderTime}, #{isDelete,jdbcType=TINYINT},
-		#{updatedAt,jdbcType=TIMESTAMP})
+		#{updatedAt,jdbcType=TIMESTAMP},#{remark,jdbcType=VARCHAR}#{invoice,jdbcType=CHAR})
 	</insert>
 	<insert id="insertSelective" parameterType="com.bao.model.Orders"
 		useGeneratedKeys="true" keyProperty="id">
@@ -97,6 +99,12 @@
 			<if test="isDelete != null">
 				is_delete,
 			</if>
+			<if test="remark != null">
+				remark,
+			</if>
+			<if test="invoice != null">
+				invoice,
+			</if>
 			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -138,6 +146,12 @@
 			</if>
 			<if test="isDelete != null">
 				#{isDelete,jdbcType=TINYINT},
+			</if>
+			<if test="remark != null">
+				#{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="invoice != null">
+				#{invoice,jdbcType=CHAR},
 			</if>
 		
 		</trim>
@@ -181,6 +195,12 @@
 			<if test="isDelete != null">
 				is_delete = #{isDelete,jdbcType=TINYINT},
 			</if>
+			<if test="remark != null">
+				remark = #{remark,jdbcType=VARCHAR},
+			</if>
+			<if test="invoice != null">
+				invoice = #{invoice,jdbcType=CHAR},
+			</if>
 		</set>
 		where id = #{id,jdbcType=BIGINT}
 	</update>
@@ -202,7 +222,11 @@
 		wedding_time = #{weddingTime},
 		order_time = #{orderTime},
 		is_delete =
-		#{isDelete,jdbcType=TINYINT}
+		#{isDelete,jdbcType=TINYINT},
+		remark =
+		#{remark,jdbcType=VARCHAR},
+		invoice =
+		#{invoice,jdbcType=CHAR}
 		where id = #{id,jdbcType=BIGINT}
 	</update>
 

@@ -106,9 +106,9 @@ public class OrderDao {
     // check request
     List<OrderDetailItem> orderDetailItems = request.getOrderDetailItems();
     if (orderDetailItems.size() == 0) throw new SystemException(500, "商品不能为空");
-    if (request.getDeliveryTime() == 0 || request.getWeddingTime() == 0)
-      throw new SystemException(500, "时间不能为空");
-    List<Long> productIds = orderDetailItems.stream().map(n -> n.getProductId()).distinct()
+    if (request.getWeddingTime() == 0)
+      throw new SystemException(500, "婚期不能为空");
+    List<Long> productIds = orderDetailItems.stream().map(OrderDetailItem::getProductId).distinct()
         .collect(Collectors.toList());
     if (productIds.size() != orderDetailItems.size()) throw new SystemException(500, "请合并相同商品下单");
 
@@ -118,8 +118,14 @@ public class OrderDao {
     orders.setCustomer(request.getCustomer());
     orders.setContact(request.getContact());
     orders.setAddress(request.getAddress());
+    orders.setInvoice(request.getInvoice());
+    orders.setRemark(request.getRemark());
     orders.setShopperName(shopper.getName());
-    orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
+    if(request.getDeliveryTime()==0){
+      orders.setDeliveryTime(null);
+    }else{
+      orders.setDeliveryTime(new Timestamp(request.getDeliveryTime()));
+    }
     orders.setWeddingTime(new Timestamp(request.getWeddingTime()));
     orders.setOrderTime(new Timestamp(System.currentTimeMillis()));
     orders.setStatus(-2);// -1预下单 0下单成功待确定
